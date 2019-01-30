@@ -15,10 +15,8 @@ public class Manager {
 	
 	Manager() {
 		window = new Window(1500,750);
-		parseData("data/example1");
+		parseData("data/lisarennt4.txt");
 		window.drawObstacles(obstacles);
-		home_x = window.getWidth()-250;
-		window.drawHome(home_x, 25);
 		algo = new Algorithm(obstacles);
 		ArrayList<Integer> pathPoints = algo.caculate((window.getHeight())/2, home_x);
 		if(pathPoints != null ) {
@@ -49,9 +47,12 @@ public class Manager {
 				int corner_count = scanner.nextInt();
 				obstacles[i] = new Obstacle(corner_count);
 				for(int j = 0; j < corner_count; j++) {
-					obstacles[i].addCorner(scanner.nextInt(), scanner.nextInt(), j);
+					int x = scanner.nextInt();
+					int y = scanner.nextInt();
+					obstacles[i].addCorner(x, y, j);
 				}
 			}
+			window.drawHome(scanner.nextInt(), scanner.nextInt());
 			scanner.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

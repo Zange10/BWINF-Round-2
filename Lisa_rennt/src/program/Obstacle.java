@@ -25,8 +25,8 @@ public class Obstacle {
 	public void addCorner(int x, int y, int index) {
 		xCorners[index] = x;
 		yCorners[index] = y;
-		xCorners_win[index] = x + 200;
-		yCorners_win[index] = y + 20;
+		xCorners_win[index] = x;
+		yCorners_win[index] = y;
 		
 		if(y < highestPoint[1]) {
 			highestPoint[0] = index;

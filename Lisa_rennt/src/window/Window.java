@@ -15,12 +15,14 @@ public class Window extends JFrame{
 
 	Container cp;
 	int width, height;
+	int roadwidth;
 	
 	public Window(int width, int height) {
 		super();
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.width = width;
 		this.height = height;
+		this.roadwidth = 100;
 		setSize(width, height);
 	    Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 	    int x = (d.width - getSize().width) / 2;
@@ -37,23 +39,23 @@ public class Window extends JFrame{
 	public void paint(Graphics g) {
 		// road (asphalt)
 		g.setColor(Color.DARK_GRAY);
-		g.fillRect(0, 0, 200, getHeight());
+		g.fillRect(0, 0, roadwidth, getHeight());
 		// road (markers)
 		int buffer = 0;
 		g.setColor(Color.WHITE);
 		while(buffer <= getHeight()) {
-			int marklength = 100;
-			g.fillRect(85, buffer, 30, marklength);
+			int marklength = 50;
+			g.fillRect(40, buffer, 15, marklength);
 			buffer += marklength*2;
 		}
 	}
 	
-	public void drawHome(int x, int diameter) {
+	public void drawHome(int x, int y) {
 		Graphics g = getGraphics();
 		g.setColor(Color.BLACK);
-		g.drawOval(x+200-diameter/2, height/2-diameter/2 + 20, diameter, diameter);
+		g.drawOval(calcX(x), calcY(y), 20, 20);
 		g.setColor(Color.RED);
-		g.fillOval(x+200-diameter/2, height/2-diameter/2 + 20, diameter, diameter);
+		g.fillOval(calcX(x), calcY(y), 20, 20);
 	}
 	
 	public void drawObstacles(Obstacle[] obstacles) {
@@ -63,14 +65,25 @@ public class Window extends JFrame{
 			int corners = obstacles[i].getCorners();
 			int[] xPoints = obstacles[i].getXCornersWin();
 			int[] yPoints = obstacles[i].getYCornersWin();
+			for(int j = 0; j < xPoints.length; j++) {
+				xPoints[j] = calcX(xPoints[j]);
+				yPoints[j] = calcY(yPoints[j]);
+			}
 			g.fillPolygon(xPoints, yPoints, corners);
 		}
 	}
-	
 
 	public void drawPath(int x1, int y1, int x2, int y2) {
 		Graphics g = getGraphics();
 		g.setColor(Color.BLUE);
 		g.drawLine(x1+200, y1+20, x2+200, y2+20);
+	}
+	
+	private int calcX(int x) {
+		return roadwidth + x;
+	}
+	
+	private int calcY(int y) {
+		return getHeight() - y;
 	}
 }
