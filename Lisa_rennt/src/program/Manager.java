@@ -11,25 +11,29 @@ public class Manager {
 	Window window;
 	Obstacle[] obstacles;
 	Algorithm algo;
-	int home_x;
+	int[] home_pos;
+	ArrayList<int[]> all_corners;
 	
 	Manager() {
 		window = new Window(1500,750);
-		parseData("data/lisarennt4.txt");
+		all_corners = new ArrayList<int[]>();
+		home_pos = new int[2];
+		parseData("data/lisarennt2.txt");
 		window.drawObstacles(obstacles);
-		algo = new Algorithm(obstacles);
-		ArrayList<Integer> pathPoints = algo.caculate((window.getHeight())/2, home_x);
-		if(pathPoints != null ) {
-			for(int i = 0; i < pathPoints.size()/2-1; i++) {
-				int x1 = pathPoints.get(i*2);
-				int y1 = pathPoints.get(i*2+1);
-				int x2 = pathPoints.get((i+1)*2);
-				int y2 = pathPoints.get((i+1)*2+1);
-				window.drawPath(x1, y1, x2, y2);
-			}
+		algo = new Algorithm(obstacles, all_corners);
+		ArrayList<ArrayList<Integer>> paths = algo.caculate(home_pos);
+		if(paths != null) {
+			for(ArrayList<Integer> pathPoints : paths)
+				for(int i = 0; i < pathPoints.size()/2-1; i++) {
+					int x1 = pathPoints.get(i*2);
+					int y1 = pathPoints.get(i*2+1);
+					int x2 = pathPoints.get((i+1)*2);
+					int y2 = pathPoints.get((i+1)*2+1);
+					window.drawPath(x1, y1, x2, y2);
+				}
 		} else {
-			int x1 = home_x;
-			int y1 = window.getHeight()/2;
+			int x1 = home_pos[0];
+			int y1 = home_pos[1];
 			int x2 = 0;
 			int y2 = window.getHeight()/2;
 			window.drawPath(x1, y1, x2, y2);
@@ -50,9 +54,12 @@ public class Manager {
 					int x = scanner.nextInt();
 					int y = scanner.nextInt();
 					obstacles[i].addCorner(x, y, j);
+					all_corners.add(new int[] {x,y});
 				}
 			}
-			window.drawHome(scanner.nextInt(), scanner.nextInt());
+			home_pos[0] = scanner.nextInt();
+			home_pos[1] = scanner.nextInt();
+			window.drawHome(home_pos[0], home_pos[1]);
 			scanner.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block

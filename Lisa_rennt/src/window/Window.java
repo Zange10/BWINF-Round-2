@@ -53,9 +53,9 @@ public class Window extends JFrame{
 	public void drawHome(int x, int y) {
 		Graphics g = getGraphics();
 		g.setColor(Color.BLACK);
-		g.drawOval(calcX(x), calcY(y), 20, 20);
+		g.drawOval(calcX(x), calcY(y), 10, 10);
 		g.setColor(Color.RED);
-		g.fillOval(calcX(x), calcY(y), 20, 20);
+		g.fillOval(calcX(x), calcY(y), 10, 10);
 	}
 	
 	public void drawObstacles(Obstacle[] obstacles) {
@@ -76,7 +76,7 @@ public class Window extends JFrame{
 	public void drawPath(int x1, int y1, int x2, int y2) {
 		Graphics g = getGraphics();
 		g.setColor(Color.BLUE);
-		g.drawLine(x1+200, y1+20, x2+200, y2+20);
+		g.drawLine(calcX(x1), calcY(y1), calcX(x2), calcY(y2));
 	}
 	
 	private int calcX(int x) {
