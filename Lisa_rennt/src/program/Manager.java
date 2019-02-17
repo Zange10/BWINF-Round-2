@@ -20,8 +20,8 @@ public class Manager {
 		home_pos = new int[2];
 		parseData("data/lisarennt1.txt");
 		window.drawObstacles(obstacles);
-		algo = new Algorithm(obstacles, all_corners);
-		ArrayList<ArrayList<Integer>> paths = algo.caculate(home_pos);
+		algo = new Algorithm(home_pos, obstacles, all_corners);
+		ArrayList<ArrayList<Integer>> paths = algo.caculate();
 		if(paths != null) {
 			for(ArrayList<Integer> pathPoints : paths)
 				for(int i = 0; i < pathPoints.size()/2-1; i++) {
