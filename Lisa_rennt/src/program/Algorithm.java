@@ -3,48 +3,46 @@ package program;
 import java.util.ArrayList;
 
 public class Algorithm {
-	ArrayList<ArrayList<Integer>> paths = new ArrayList<ArrayList<Integer>>();
+	ArrayList<ArrayList<Integer>> routes = new ArrayList<ArrayList<Integer>>();
 	Obstacle[] obstacles;
 	ArrayList<int[]> all_corners;
 	
 	Algorithm(Obstacle[] obstacles, ArrayList<int[]> all_corners) {
 		this.obstacles = obstacles;
-		this.all_corners = all_corners;
+		this.all_corners = all_corners;            
 	}
 	
 	public ArrayList<ArrayList<Integer>> caculate(int[] home_pos) {
-		ArrayList<Integer> pathPoints = new ArrayList<Integer>();
+		ArrayList<Integer> routePoints = new ArrayList<Integer>();
 		int lastX = home_pos[0];
 		int lastY = home_pos[1];
 		
 		// first point at home
-		pathPoints.add(lastX);
-		pathPoints.add(lastY);
+		routePoints.add(lastX);
+		routePoints.add(lastY);
 		
-		calcAllPaths(all_corners, pathPoints);
+		calcAllPaths(all_corners, routePoints);
 		
-		return paths;
+		return routes;
 	}
 	
-	private void calcAllPaths(ArrayList<int[]> remaining_corners, ArrayList<Integer> pathPoints) {
+	private void calcAllPaths(ArrayList<int[]> remaining_corners, ArrayList<Integer> routePoints) {
 		for(int i = 0; i < remaining_corners.size(); i++) {
-			ArrayList<int[]> buf_rem_corners = remaining_corners;
-			ArrayList<Integer> buf_pathPoints = pathPoints;
+			ArrayList<int[]> buf_rem_corners = (ArrayList<int[]>) remaining_corners.clone();
+			ArrayList<Integer> buf_pathPoints = (ArrayList<Integer>) routePoints.clone();
 			int x = remaining_corners.get(i)[0];
 			int y = remaining_corners.get(i)[1];
 			buf_pathPoints.add(x);
 			buf_pathPoints.add(y);
 			buf_rem_corners.remove(i);
-			System.out.println(remaining_corners.size());
 			calcAllPaths(buf_rem_corners, buf_pathPoints);
-			System.out.println(remaining_corners.size());
-			System.out.println(((i+1) < remaining_corners.size()));
 		}
 		int x = 0;
-		int y = pathPoints.get(pathPoints.size()-1);
-		pathPoints.add(x);
-		pathPoints.add(y);
-		paths.add(pathPoints);
+		int y = routePoints.get(routePoints.size()-1);
+		routePoints.add(x);
+		routePoints.add(y);
+		routes.add(routePoints);
+		System.out.println(routes.size());
 	}
 	
 	

@@ -18,7 +18,7 @@ public class Manager {
 		window = new Window(1500,750);
 		all_corners = new ArrayList<int[]>();
 		home_pos = new int[2];
-		parseData("data/lisarennt2.txt");
+		parseData("data/lisarennt1.txt");
 		window.drawObstacles(obstacles);
 		algo = new Algorithm(obstacles, all_corners);
 		ArrayList<ArrayList<Integer>> paths = algo.caculate(home_pos);
