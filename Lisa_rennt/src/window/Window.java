@@ -63,8 +63,8 @@ public class Window extends JFrame{
 		g.setColor(Color.BLACK);
 		for(int i = 0; i < obstacles.length; i++) {
 			int corners = obstacles[i].getCorners();
-			int[] xPoints = obstacles[i].getXCornersWin();
-			int[] yPoints = obstacles[i].getYCornersWin();
+			int[] xPoints = obstacles[i].getXCorners();
+			int[] yPoints = obstacles[i].getYCorners();
 			for(int j = 0; j < xPoints.length; j++) {
 				xPoints[j] = calcX(xPoints[j]);
 				yPoints[j] = calcY(yPoints[j]);

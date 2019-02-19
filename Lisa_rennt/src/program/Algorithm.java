@@ -26,13 +26,29 @@ public class Algorithm {
 			int y1 = home_pos[1];
 			int x2 = all_corners.get(i)[0];
 			int y2 = all_corners.get(i)[1];
-			home_paths[i] = new int[]{x1, y1, x2, y2};
+			for(Obstacle o : obstacles) {
+				if(!(o.isOnPath(x1, y1, x2, y2))) home_paths[i] = new int[]{x1, y1, x2, y2};
+				else home_paths[i] = null;
+			}
+//			home_paths[i] = new int[]{x1, y1, x2, y2};
 		}
 		int home_x1 = home_pos[0];
 		int home_y1 = home_pos[1];
 		int home_x2 = 0;
 		int home_y2 = home_pos[1];
+		for(Obstacle o : obstacles) {
+			if(!(o.isOnPath(home_x1, home_y1, home_x2, home_y2))) home_paths[all_corners.size()] = new int[]{home_x1, home_y1, home_x2, home_y2};
+			else home_paths[all_corners.size()] = null;
+//			home_paths[all_corners.size()] = new int[]{home_x1, home_y1, home_x2, home_y2};
+		}
 		home_paths[all_corners.size()] = new int[]{home_x1, home_y1, home_x2, home_y2};
+//		for(int[] j : home_paths) {
+//			for(int c : j) {
+//				System.out.print(c + " ");
+//			}
+//			System.out.println("");
+//		}
+//		System.out.println("---");
 		all_paths[home_index] = home_paths;
 		for(int i = 0; i < all_corners.size(); i++) {
 			int[][] new_paths = new int[all_corners.size()+1][4];
@@ -43,7 +59,12 @@ public class Algorithm {
 					int x2 = all_corners.get(j)[0];
 					int y2 = all_corners.get(j)[1];
 //					System.out.println(j + " " + x1 + " " + y1 + " " + x2 + " " + y2);
-					new_paths[j] = new int[]{x1, y1, x2, y2};
+					for(Obstacle o : obstacles) {
+						if(!(o.isOnPath(x1, y1, x2, y2))) new_paths[j] = new int[]{x1, y1, x2, y2};
+						else new_paths[j] = null;
+					}
+//					new_paths[j] = new int[]{x1, y1, x2, y2};
+					
 				} else {
 //					System.out.println(i);
 					new_paths[j] = null;
@@ -54,7 +75,11 @@ public class Algorithm {
 			int x2 = 0;
 			int y2 = all_corners.get(i)[1];
 //			System.out.println(x1 + " " + y1 + " " + x2 + " " + y2);
-			new_paths[all_corners.size()] = new int[]{x1, y1, x2, y2};
+			for(Obstacle o : obstacles) {
+				if(!(o.isOnPath(x1, y1, x2, y2))) new_paths[all_corners.size()] = new int[]{x1, y1, x2, y2};
+				else new_paths[all_corners.size()] = null;
+			}
+//			new_paths[all_corners.size()] = new int[]{x1, y1, x2, y2};
 //				for(int[] j : new_paths) {
 //					for(int c : j) {
 //						System.out.print(c + " ");
@@ -87,7 +112,13 @@ public class Algorithm {
 		routePoints.add(lastX);
 		routePoints.add(lastY);
 		calcAllPaths(home_index, all_paths, routePoints);
-		
+//		System.out.println("\n---\n" + routes.size());
+//		for(ArrayList<Integer> i : routes) {
+//			for(int a : i) {
+//				System.out.print(a + " ");
+//			}
+//			System.out.println("");
+//		}
 		return routes;
 	}
 	
@@ -95,10 +126,11 @@ public class Algorithm {
 		int[][][] rem_paths = pos_paths.clone();
 		for(int i = 0; i < rem_paths[pos].length-1; i++) {
 			if(rem_paths[pos][i] != null) {
+//				System.out.println(pos + " " + i);
 //				if(pos < 3) System.out.println(pos + " " + i + " -- " + all_corners.get(pos)[1] + " " + all_corners.get(i)[1]);
 				ArrayList<Integer> buf_pathPoints = (ArrayList<Integer>) routePoints.clone();
-				int x = rem_paths[pos][i][0];
-				int y = rem_paths[pos][i][1];
+				int x = rem_paths[pos][i][2];
+				int y = rem_paths[pos][i][3];
 //				System.out.println(x + ", " + y);
 				buf_pathPoints.add(x);
 				buf_pathPoints.add(y);
