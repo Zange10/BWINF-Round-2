@@ -54,7 +54,6 @@ public class Obstacle {
 			leftestPoint[2] = index;
 		}
 		// highest is first
-		System.out.println(index + " " + corners);
 		if(index > 0) {
 			if(yCorners[index-1] > y) {
 				sides[index-1][0] = xCorners[index-1];
@@ -85,13 +84,16 @@ public class Obstacle {
 	
 	public boolean isOnPath(int x1, int y1, int x2, int y2) {
 		int path_high, path_low, path_left, path_right;
+		boolean first_is_left;
 		// initialize path values -----------------------
 		if(x1 < x2) {
 			path_left = x1;
 			path_right = x2;
+			first_is_left = true;
 		} else {
 			path_left = x2;
 			path_right = x1;
+			first_is_left = false;
 		}
 		
 		if(y1 > y2) {
@@ -106,32 +108,42 @@ public class Obstacle {
 //		System.out.println((path_low > highestPoint[1]) + " " + (path_high < lowestPoint[1]) + " " +
 //				(path_right < leftestPoint[0]) + " " + (path_left > rightestPoint[0]));
 		// Path is near the obstacles --------------------
-		if(path_low > highestPoint[1] || path_high < lowestPoint[1] ||
-				path_right < leftestPoint[0] || path_left > rightestPoint[0]) return false;
+		if(path_low >= highestPoint[1] || path_high <= lowestPoint[1] ||
+				path_right <= leftestPoint[0] || path_left >= rightestPoint[0]) return false;
 		
 		
-		// TODO: fix code below (gradient 0/infinity; no path not shown)
+		// TODO: fix code below (gradient infinity; no path not shown)
+		
 		
 		// -----------------------------
 		for(int[] side : sides) {
+			System.out.println(side[0] + " " + side[1] + " " + side[2] + " " + side[3]);
 			// high and low values of side
-			System.out.println(side[0] + ", " + side[1] + ", " + side[2] + ", " + side[3]);
 			int xval_high_side = side[0];
 			int y_high = side[1];
 			int xval_low_side = side[2];
 			int y_low = side[3];
-
-			double path_gradient = (double)(path_high - path_low) / (double)(path_right - path_left);
-//			System.out.println(path_gradient);
+			double path_gradient;
+			if(first_is_left) path_gradient = (double)(y2 - y1) / (double)(x2 - x1);
+			else path_gradient = (double)(y1 - y2) / (double)(x1 - x2);
+			double n_path = -(path_gradient*x1-y1); // intersection with y-axis
+			System.out.println(path_gradient + " --- " + n_path);
 			if(path_gradient != 0) {
 				// values at high and low of side
 				// y = m*x+n <=> x = (y-n)/m
 				// y is y_high or y_low; n is path_low; m is path_gradient
-				int xval_high = (int) ((y_high-path_low)/path_gradient);
-				int xval_low = (int) ((y_low-path_low)/path_gradient);
-				
-				boolean isRightOfSide_high = (xval_high > xval_high_side);
-				boolean isRightOfSide_low = (xval_low > xval_low_side);
+				int xval_high = (int) Math.round((y_high-n_path)/path_gradient);
+				int xval_low = (int) Math.round((y_low-n_path)/path_gradient);
+				System.out.println(xval_high + "\t" + xval_low);
+				System.out.println(xval_high_side + "\t" + xval_low_side);
+				boolean isRightOfSide_high, isRightOfSide_low;
+				if(path_gradient > 0) {
+					isRightOfSide_high = (xval_high > xval_high_side);
+					isRightOfSide_low = (xval_low > xval_low_side);
+				} else {
+					isRightOfSide_high = (xval_high >= xval_high_side);
+					isRightOfSide_low = (xval_low >= xval_low_side);
+				}
 				
 				if(isRightOfSide_high != isRightOfSide_low) return true;
 			} else {
@@ -140,14 +152,10 @@ public class Obstacle {
 				boolean isAboveSide_low = (path_high > y_low);
 				
 				if(isBelowSide_high && isAboveSide_low) {
-//					System.out.println("0 raus");
-//					System.out.println(x1 + " " + y1 + " " + x2 + " " + y2);
 					return true;
 				}
 			}
 		}
-		System.out.println("nope");
-		System.out.println(sides.length);
 		return false;
 	}
 

@@ -40,7 +40,6 @@ public class Algorithm {
 		for(Obstacle o : obstacles) {
 			if(!(o.isOnPath(home_x1, home_y1, home_x2, home_y2))) {
 				home_paths[all_corners.size()] = new int[]{home_x1, home_y1, home_x2, home_y2};
-				System.out.println("Fehler");
 			}
 			else home_paths[all_corners.size()] = null;
 //			home_paths[all_corners.size()] = new int[]{home_x1, home_y1, home_x2, home_y2};
@@ -106,7 +105,8 @@ public class Algorithm {
 //			System.out.println("---");
 //		}
 		System.out.println("---");
-		System.out.println(obstacles[0].isOnPath(633, 189, 460, 70));
+//		System.out.println(obstacles[0].isOnPath(633, 189, 535, 410));
+		System.out.println(obstacles[0].isOnPath(350, 100, 500, 180));
 	}
 	
 	public ArrayList<ArrayList<Integer>> caculate() {
