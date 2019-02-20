@@ -84,16 +84,16 @@ public class Obstacle {
 	
 	public boolean isOnPath(int x1, int y1, int x2, int y2) {
 		int path_high, path_low, path_left, path_right;
-		boolean first_is_left;
+//		boolean first_is_left;
 		// initialize path values -----------------------
 		if(x1 < x2) {
 			path_left = x1;
 			path_right = x2;
-			first_is_left = true;
+//			first_is_left = true;
 		} else {
 			path_left = x2;
 			path_right = x1;
-			first_is_left = false;
+//			first_is_left = false;
 		}
 		
 		if(y1 > y2) {
@@ -116,18 +116,25 @@ public class Obstacle {
 		
 		
 		// -----------------------------
-		for(int[] side : sides) {
-//			System.out.println(side[0] + " " + side[1] + " " + side[2] + " " + side[3]);
+		for(int i = 0; i < sides.length; i++) {
+//			System.out.println(sides[i][0] + " " + sides[i][1] + " " + sides[i][2] + " " + sides[i][3]);
 			// high and low values of side
-			int xval_high_side = side[0];
-			int y_high = side[1];
-			int xval_low_side = side[2];
-			int y_low = side[3];
-			if(!((side[0] == x1 && side[1] == y1) || (side[2] == x1 && side[3] == y1) ||
-					(side[0] == x2 && side[1] == y2) || (side[2] == x2 && side[3] == y2))) {
+			int xval_high_side = sides[i][0];
+			int y_high = sides[i][1];
+			int xval_low_side = sides[i][2];
+			int y_low = sides[i][3];
+			
+			boolean b1, b2, b3, b4;
+			b1 = (sides[i][0] == x1 && sides[i][1] == y1);
+			b2 = (sides[i][2] == x1 && sides[i][3] == y1);
+			b3 = (sides[i][0] == x2 && sides[i][1] == y2);
+			b4 = (sides[i][2] == x2 && sides[i][3] == y2);
+			
+			if(!(b1||b2||b3||b4)) {
 				double path_gradient;
-				if(first_is_left) path_gradient = (double)(y2 - y1) / (double)(x2 - x1);
-				else path_gradient = (double)(y1 - y2) / (double)(x1 - x2);
+//				if(first_is_left) path_gradient = (double)(y2 - y1) / (double)(x2 - x1);
+//				else path_gradient = (double)(y1 - y2) / (double)(x1 - x2);
+				path_gradient = (double)(y2 - y1) / (double)(x2 - x1);
 				double n_path = -(path_gradient*x1-y1); // intersection with y-axis
 //				System.out.println(path_gradient + " --- " + n_path);
 				if(path_gradient != 0) {
@@ -157,6 +164,45 @@ public class Obstacle {
 						return true;
 					}
 				}
+				
+				
+				
+			} else {
+				
+				int[] intersection = new int[2];
+				if(b1 || b2) {
+					intersection[0] = x1;
+					intersection[1] = y1;
+				} else {
+					intersection[0] = x2;
+					intersection[1] = y2;
+				}
+				
+				int sec_index;	// index of second intersecting side
+				
+				if(i > 0) {
+					if((sides[i-1][0] == intersection[0] && sides[i-1][1] == intersection[1]) ||
+							(sides[i-1][2] == intersection[0] && sides[i-1][3] == intersection[1])) {
+						sec_index = i-1;
+					} else {
+						if(i < corners-1) sec_index = i+1;
+						else sec_index = 0;
+					}
+				} else {
+					if((sides[corners-1][0] == intersection[0] && sides[corners-1][1] == intersection[1]) ||
+							(sides[corners-1][2] == intersection[0] && sides[corners-1][3] == intersection[1])) {
+						sec_index = corners-1;
+					} else {
+						if(i > 0) sec_index = i-1;
+						else sec_index = corners-1;
+					}
+				}
+				
+				double gradient_path, gradient_first, gradient_second;
+				
+				gradient_path = (double)(y2 - y1) / (double)(x2 - x1);
+				gradient_first = (double)(sides[i][3] - sides[i][1]) / (double)(sides[i][2] - sides[i][0]);
+				gradient_second = (double)(sides[sec_index][3] - sides[sec_index][1]) / (double)(sides[sec_index][2] - sides[sec_index][0]);
 			}
 		}
 		return false;
