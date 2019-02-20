@@ -123,36 +123,39 @@ public class Obstacle {
 			int y_high = side[1];
 			int xval_low_side = side[2];
 			int y_low = side[3];
-			double path_gradient;
-			if(first_is_left) path_gradient = (double)(y2 - y1) / (double)(x2 - x1);
-			else path_gradient = (double)(y1 - y2) / (double)(x1 - x2);
-			double n_path = -(path_gradient*x1-y1); // intersection with y-axis
-			System.out.println(path_gradient + " --- " + n_path);
-			if(path_gradient != 0) {
-				// values at high and low of side
-				// y = m*x+n <=> x = (y-n)/m
-				// y is y_high or y_low; n is path_low; m is path_gradient
-				int xval_high = (int) Math.round((y_high-n_path)/path_gradient);
-				int xval_low = (int) Math.round((y_low-n_path)/path_gradient);
-				System.out.println(xval_high + "\t" + xval_low);
-				System.out.println(xval_high_side + "\t" + xval_low_side);
-				boolean isRightOfSide_high, isRightOfSide_low;
-				if(path_gradient > 0) {
-					isRightOfSide_high = (xval_high > xval_high_side);
-					isRightOfSide_low = (xval_low > xval_low_side);
+			if(!((side[0] == x1 && side[1] == y1) || (side[2] == x1 && side[3] == y1) ||
+					(side[0] == x2 && side[1] == y2) || (side[2] == x2 && side[3] == y2))) {
+				double path_gradient;
+				if(first_is_left) path_gradient = (double)(y2 - y1) / (double)(x2 - x1);
+				else path_gradient = (double)(y1 - y2) / (double)(x1 - x2);
+				double n_path = -(path_gradient*x1-y1); // intersection with y-axis
+				System.out.println(path_gradient + " --- " + n_path);
+				if(path_gradient != 0) {
+					// values at high and low of side
+					// y = m*x+n <=> x = (y-n)/m
+					// y is y_high or y_low; n is path_low; m is path_gradient
+					int xval_high = (int) Math.round((y_high-n_path)/path_gradient);
+					int xval_low = (int) Math.round((y_low-n_path)/path_gradient);
+					System.out.println(xval_high + "\t" + xval_low);
+					System.out.println(xval_high_side + "\t" + xval_low_side);
+					boolean isRightOfSide_high, isRightOfSide_low;
+					if(path_gradient > 0) {
+						isRightOfSide_high = (xval_high > xval_high_side);
+						isRightOfSide_low = (xval_low > xval_low_side);
+					} else {
+						isRightOfSide_high = (xval_high >= xval_high_side);
+						isRightOfSide_low = (xval_low >= xval_low_side);
+					}
+					
+					if(isRightOfSide_high != isRightOfSide_low) return true;
 				} else {
-					isRightOfSide_high = (xval_high >= xval_high_side);
-					isRightOfSide_low = (xval_low >= xval_low_side);
-				}
-				
-				if(isRightOfSide_high != isRightOfSide_low) return true;
-			} else {
-				// path_high = path_low
-				boolean isBelowSide_high = (path_high < y_high);
-				boolean isAboveSide_low = (path_high > y_low);
-				
-				if(isBelowSide_high && isAboveSide_low) {
-					return true;
+					// path_high = path_low
+					boolean isBelowSide_high = (path_high < y_high);
+					boolean isAboveSide_low = (path_high > y_low);
+					
+					if(isBelowSide_high && isAboveSide_low) {
+						return true;
+					}
 				}
 			}
 		}

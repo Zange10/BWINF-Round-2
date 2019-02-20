@@ -33,7 +33,7 @@ public class Window extends JFrame{
 	    cp = getContentPane();
 	    cp.setLayout(null);
 	    setVisible(true);
-	    cp.setBackground(Color.WHITE);
+	    cp.setBackground(Color.DARK_GRAY);
 	}
 
 	public void paint(Graphics g) {
@@ -75,7 +75,7 @@ public class Window extends JFrame{
 
 	public void drawPath(int x1, int y1, int x2, int y2) {
 		Graphics g = getGraphics();
-		g.setColor(Color.BLUE);
+		g.setColor(Color.GREEN);
 		g.drawLine(calcX(x1), calcY(y1), calcX(x2), calcY(y2));
 	}
 	
