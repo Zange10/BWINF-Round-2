@@ -30,6 +30,7 @@ public class Window extends JFrame{
 	    setLocation(x, y);
 	    setTitle("Lisa");
 	    setResizable(false);
+	    setBackground(Color.DARK_GRAY);
 	    cp = getContentPane();
 	    cp.setLayout(null);
 	    setVisible(true);

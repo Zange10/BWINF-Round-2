@@ -26,33 +26,19 @@ public class Algorithm {
 			int y1 = home_pos[1];
 			int x2 = all_corners.get(i)[0];
 			int y2 = all_corners.get(i)[1];
-			for(Obstacle o : obstacles) {
-				if(!(o.isOnPath(x1, y1, x2, y2))) home_paths[i] = new int[]{x1, y1, x2, y2};
-				else home_paths[i] = null;
-				System.out.println((o.isOnPath(x1, y1, x2, y2)));
-			}
-//			home_paths[i] = new int[]{x1, y1, x2, y2};
+			if(!(intersectsWithAnyObstacle(x1, y1, x2, y2))) home_paths[i] = new int[]{x1, y1, x2, y2};
+			else home_paths[i] = null;
 		}
 		int home_x1 = home_pos[0];
 		int home_y1 = home_pos[1];
 		int home_x2 = 0;
 		int home_y2 = home_pos[1];
-		for(Obstacle o : obstacles) {
-			if(!(o.isOnPath(home_x1, home_y1, home_x2, home_y2))) {
-				home_paths[all_corners.size()] = new int[]{home_x1, home_y1, home_x2, home_y2};
-			}
-			else home_paths[all_corners.size()] = null;
-//			home_paths[all_corners.size()] = new int[]{home_x1, home_y1, home_x2, home_y2};
+		if(!(intersectsWithAnyObstacle(home_x1, home_y1, home_x2, home_y2))) {
+			home_paths[all_corners.size()] = new int[]{home_x1, home_y1, home_x2, home_y2};
 		}
-//		home_paths[all_corners.size()] = new int[]{home_x1, home_y1, home_x2, home_y2};
-//		for(int[] j : home_paths) {
-//			if(j != null) {for(int c : j) {
-//				System.out.print(c + " ");
-//			}}
-//			System.out.println("");
-//		}
-//		System.out.println("---");
+		else home_paths[all_corners.size()] = null;
 		all_paths[home_index] = home_paths;
+		
 		for(int i = 0; i < all_corners.size(); i++) {
 			int[][] new_paths = new int[all_corners.size()+1][4];
 			for(int j = 0; j < all_corners.size(); j++) {
@@ -61,15 +47,9 @@ public class Algorithm {
 					int y1 = all_corners.get(i)[1];
 					int x2 = all_corners.get(j)[0];
 					int y2 = all_corners.get(j)[1];
-//					System.out.println(j + " " + x1 + " " + y1 + " " + x2 + " " + y2);
-					for(Obstacle o : obstacles) {
-						if(!(o.isOnPath(x1, y1, x2, y2))) new_paths[j] = new int[]{x1, y1, x2, y2};
-						else new_paths[j] = null;
-					}
-//					new_paths[j] = new int[]{x1, y1, x2, y2};
-					
+					if(!(intersectsWithAnyObstacle(x1, y1, x2, y2))) new_paths[j] = new int[]{x1, y1, x2, y2};
+					else new_paths[j] = null;
 				} else {
-//					System.out.println(i);
 					new_paths[j] = null;
 				}
 			}
@@ -77,36 +57,13 @@ public class Algorithm {
 			int y1 = all_corners.get(i)[1];
 			int x2 = 0;
 			int y2 = all_corners.get(i)[1];
-//			System.out.println(x1 + " " + y1 + " " + x2 + " " + y2);
-			for(Obstacle o : obstacles) {
-				if(!(o.isOnPath(x1, y1, x2, y2))) new_paths[all_corners.size()] = new int[]{x1, y1, x2, y2};
-				else new_paths[all_corners.size()] = null;
-			}
-//			new_paths[all_corners.size()] = new int[]{x1, y1, x2, y2};
-//				for(int[] j : new_paths) {
-//					for(int c : j) {
-//						System.out.print(c + " ");
-//					}
-//					System.out.println("");
-//				}
-//				System.out.println("---");
+			if(!(intersectsWithAnyObstacle(x1, y1, x2, y2))) new_paths[all_corners.size()] = new int[]{x1, y1, x2, y2};
+			else new_paths[all_corners.size()] = null;
 			all_paths[i] = new_paths;
 		}
-//		System.out.println("---");
-//		for(int[][] i : all_paths) {
-//			for(int[] j : i) {
-//				if(j != null) {
-//				for(int c : j) {
-//					System.out.print(c + " ");
-//				}
-//				}
-//				System.out.println("");
-//			}
-//			System.out.println("---");
-//		}
-		System.out.println("---");
+		System.out.println("-----------------------------------------");
 //		System.out.println(obstacles[0].isOnPath(633, 189, 535, 410));
-		System.out.println(obstacles[0].isOnPath(350, 100, 500, 180));
+		System.out.println(obstacles[0].isOnPath(500, 180, 450, 200));
 	}
 	
 	public ArrayList<ArrayList<Integer>> caculate() {
@@ -117,27 +74,36 @@ public class Algorithm {
 		// first point at home
 		routePoints.add(lastX);
 		routePoints.add(lastY);
-		calcAllPaths(home_index, all_paths, routePoints);
-//		System.out.println("\n---\n" + routes.size());
-//		for(ArrayList<Integer> i : routes) {
-//			for(int a : i) {
-//				System.out.print(a + " ");
-//			}
-//			System.out.println("");
-//		}
+		
+		showAllPaths();
+		
+//-----------------------------------------------------------------	
+//		calcAllPaths(home_index, all_paths, routePoints);
+//----------------------------------------------------------------		
 		return routes;
+	}
+	
+	private void showAllPaths() {
+		for(int[][] a : all_paths) {
+			for(int[] p : a) {
+				if(p != null) {
+					ArrayList<Integer> points = new ArrayList<Integer>();
+					for(int c : p) {
+						points.add(c);
+					}
+					routes.add(points);
+				}
+			}
+		}
 	}
 	
 	private void calcAllPaths(int pos, int[][][] pos_paths, ArrayList<Integer> routePoints) {
 		int[][][] rem_paths = pos_paths.clone();
 		for(int i = 0; i < rem_paths[pos].length-1; i++) {
 			if(rem_paths[pos][i] != null) {
-//				System.out.println(pos + " " + i);
-//				if(pos < 3) System.out.println(pos + " " + i + " -- " + all_corners.get(pos)[1] + " " + all_corners.get(i)[1]);
 				ArrayList<Integer> buf_pathPoints = (ArrayList<Integer>) routePoints.clone();
 				int x = rem_paths[pos][i][2];
 				int y = rem_paths[pos][i][3];
-//				System.out.println(x + ", " + y);
 				buf_pathPoints.add(x);
 				buf_pathPoints.add(y);
 				rem_paths[pos][i] = null;
@@ -152,5 +118,16 @@ public class Algorithm {
 			routePoints.add(y);
 			routes.add(routePoints);
 		}
+	}
+	
+	private boolean intersectsWithAnyObstacle(int x1, int y1, int x2, int y2) {
+		boolean intersects = false;
+		for(Obstacle o : obstacles) {
+			if(o.isOnPath(x1, y1, x2, y2)) {
+				intersects = true;
+				break;
+			}
+		}
+		return intersects;
 	}
 }
