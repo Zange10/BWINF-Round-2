@@ -29,6 +29,7 @@ public class Algorithm {
 			for(Obstacle o : obstacles) {
 				if(!(o.isOnPath(x1, y1, x2, y2))) home_paths[i] = new int[]{x1, y1, x2, y2};
 				else home_paths[i] = null;
+				System.out.println((o.isOnPath(x1, y1, x2, y2)));
 			}
 //			home_paths[i] = new int[]{x1, y1, x2, y2};
 		}
@@ -37,15 +38,18 @@ public class Algorithm {
 		int home_x2 = 0;
 		int home_y2 = home_pos[1];
 		for(Obstacle o : obstacles) {
-			if(!(o.isOnPath(home_x1, home_y1, home_x2, home_y2))) home_paths[all_corners.size()] = new int[]{home_x1, home_y1, home_x2, home_y2};
+			if(!(o.isOnPath(home_x1, home_y1, home_x2, home_y2))) {
+				home_paths[all_corners.size()] = new int[]{home_x1, home_y1, home_x2, home_y2};
+				System.out.println("Fehler");
+			}
 			else home_paths[all_corners.size()] = null;
 //			home_paths[all_corners.size()] = new int[]{home_x1, home_y1, home_x2, home_y2};
 		}
-		home_paths[all_corners.size()] = new int[]{home_x1, home_y1, home_x2, home_y2};
+//		home_paths[all_corners.size()] = new int[]{home_x1, home_y1, home_x2, home_y2};
 //		for(int[] j : home_paths) {
-//			for(int c : j) {
+//			if(j != null) {for(int c : j) {
 //				System.out.print(c + " ");
-//			}
+//			}}
 //			System.out.println("");
 //		}
 //		System.out.println("---");
@@ -101,6 +105,8 @@ public class Algorithm {
 //			}
 //			System.out.println("---");
 //		}
+		System.out.println("---");
+		System.out.println(obstacles[0].isOnPath(633, 189, 460, 70));
 	}
 	
 	public ArrayList<ArrayList<Integer>> caculate() {
@@ -139,29 +145,12 @@ public class Algorithm {
 				calcAllPaths(i, rem_paths, buf_pathPoints);
 			}
 		}
-		int x = 0;
-		int y = routePoints.get(routePoints.size()-1);
-		routePoints.add(x);
-		routePoints.add(y);
-		routes.add(routePoints);
+		if(pos_paths[pos][pos_paths[pos].length-1] != null) {
+			int x = 0;
+			int y = pos_paths[pos][pos_paths[pos].length-1][3];
+			routePoints.add(x);
+			routePoints.add(y);
+			routes.add(routePoints);
+		}
 	}
-	
-//	private void calcAllPaths(ArrayList<int[]> remaining_corners, ArrayList<Integer> routePoints) {
-//		for(int i = 0; i < remaining_corners.size(); i++) {
-//			ArrayList<int[]> buf_rem_corners = (ArrayList<int[]>) remaining_corners.clone();
-//			ArrayList<Integer> buf_pathPoints = (ArrayList<Integer>) routePoints.clone();
-//			int x = remaining_corners.get(i)[0];
-//			int y = remaining_corners.get(i)[1];
-//			buf_pathPoints.add(x);
-//			buf_pathPoints.add(y);
-//			buf_rem_corners.remove(i);
-//			calcAllPaths(buf_rem_corners, buf_pathPoints);
-//		}
-//		int x = 0;
-//		int y = routePoints.get(routePoints.size()-1);
-//		routePoints.add(x);
-//		routePoints.add(y);
-//		routes.add(routePoints);
-//		System.out.println(routes.size());
-//	}
 }
