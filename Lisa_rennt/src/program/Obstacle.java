@@ -178,6 +178,8 @@ public class Obstacle {
 					intersection[1] = y2;
 				}
 				
+				System.out.println(intersection[0] + " " + intersection[1]);
+				
 				int sec_index;	// index of second intersecting side
 				
 				if(i > 0) {
@@ -203,6 +205,27 @@ public class Obstacle {
 				gradient_path = (double)(y2 - y1) / (double)(x2 - x1);
 				gradient_first = (double)(sides[i][3] - sides[i][1]) / (double)(sides[i][2] - sides[i][0]);
 				gradient_second = (double)(sides[sec_index][3] - sides[sec_index][1]) / (double)(sides[sec_index][2] - sides[sec_index][0]);
+				
+				// angle to x-axis
+				double angle_path = Math.toDegrees(Math.atan(gradient_path));
+				if(angle_path < 0) angle_path = 180 + angle_path;
+				
+				double angle_first = Math.toDegrees(Math.atan(gradient_first));
+				if(angle_first < 0) angle_first = 180 + angle_first;
+
+				double angle_second = Math.toDegrees(Math.atan(gradient_second));
+				if(angle_second < 0) angle_second = 180 + angle_second;
+				
+				System.out.print(sides[i][0] + " " + sides[i][1] + " " + sides[i][2] + " " + sides[i][3] + " - ");
+				System.out.println(sides[sec_index][0] + " " + sides[sec_index][1] + " " + sides[sec_index][2] + " " + sides[sec_index][3]);
+				System.out.println(" G " + gradient_path + " " + gradient_first + " " + gradient_second);
+//				System.out.println(" A " + angle_path + " " + angle_first + " " + angle_second);
+				
+				// calculation
+				if((angle_path > angle_first && angle_path < angle_second) || 
+						angle_path < angle_first && angle_path > angle_second) {
+					return true;
+				}
 			}
 		}
 		return false;

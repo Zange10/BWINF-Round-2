@@ -63,7 +63,7 @@ public class Algorithm {
 		}
 		System.out.println("-----------------------------------------");
 //		System.out.println(obstacles[0].isOnPath(633, 189, 535, 410));
-		System.out.println(obstacles[0].isOnPath(500, 180, 450, 200));
+		System.out.println(obstacles[0].isOnPath(115, 120, 450, 200));
 	}
 	
 	public ArrayList<ArrayList<Integer>> caculate() {
