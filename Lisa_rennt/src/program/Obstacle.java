@@ -108,11 +108,12 @@ public class Obstacle {
 //		System.out.println((path_low > highestPoint[1]) + " " + (path_high < lowestPoint[1]) + " " +
 //				(path_right < leftestPoint[0]) + " " + (path_left > rightestPoint[0]));
 		// Path is near the obstacles --------------------
+		System.out.println(highestPoint[1] + " " + lowestPoint[1]);
 		if(path_low >= highestPoint[1] || path_high <= lowestPoint[1] ||
 				path_right <= leftestPoint[0] || path_left >= rightestPoint[0]) return false;
 		
 		
-		// TODO: fix code below (gradient infinity; no path not shown)
+		// TODO: fix code below (gradient infinity)
 		
 		
 		// -----------------------------
@@ -178,7 +179,7 @@ public class Obstacle {
 					intersection[1] = y2;
 				}
 				
-				System.out.println(intersection[0] + " " + intersection[1]);
+//				System.out.println(intersection[0] + " " + intersection[1]);
 				
 				int sec_index;	// index of second intersecting side
 				
@@ -195,8 +196,8 @@ public class Obstacle {
 							(sides[corners-1][2] == intersection[0] && sides[corners-1][3] == intersection[1])) {
 						sec_index = corners-1;
 					} else {
-						if(i > 0) sec_index = i-1;
-						else sec_index = corners-1;
+						if(i < corners-1) sec_index = i+1;
+						else sec_index = 0;
 					}
 				}
 				
@@ -206,31 +207,59 @@ public class Obstacle {
 				gradient_first = (double)(sides[i][3] - sides[i][1]) / (double)(sides[i][2] - sides[i][0]);
 				gradient_second = (double)(sides[sec_index][3] - sides[sec_index][1]) / (double)(sides[sec_index][2] - sides[sec_index][0]);
 				
+				
+				
 				// angle to x-axis
 				double angle_path = Math.toDegrees(Math.atan(gradient_path));
-				if(angle_path < 0) angle_path = 180 + angle_path;
+//				if(angle_path < 0) angle_path = 180 + angle_path;
 				
 				double angle_first = Math.toDegrees(Math.atan(gradient_first));
-				if(angle_first < 0) angle_first = 180 + angle_first;
+//				if(angle_first < 0) angle_first = 180 + angle_first;
 
 				double angle_second = Math.toDegrees(Math.atan(gradient_second));
-				if(angle_second < 0) angle_second = 180 + angle_second;
+//				if(angle_second < 0) angle_second = 180 + angle_second;
 				
-				System.out.print(sides[i][0] + " " + sides[i][1] + " " + sides[i][2] + " " + sides[i][3] + " - ");
-				System.out.println(sides[sec_index][0] + " " + sides[sec_index][1] + " " + sides[sec_index][2] + " " + sides[sec_index][3]);
+				System.out.print(sides[i][0] + " " + sides[i][1] + " " + sides[i][2] + " " + sides[i][3] + " (" + i + ") - ");
+				System.out.println(sides[sec_index][0] + " " + sides[sec_index][1] + " " + sides[sec_index][2] + " " + sides[sec_index][3] + " (" + sec_index + ")");
 				System.out.println(" G " + gradient_path + " " + gradient_first + " " + gradient_second);
-//				System.out.println(" A " + angle_path + " " + angle_first + " " + angle_second);
+				System.out.println(" A " + angle_path + " " + angle_first + " " + angle_second);
 				
 				// calculation
-				if((angle_path > angle_first && angle_path < angle_second) || 
-						angle_path < angle_first && angle_path > angle_second) {
-					return true;
-				}
+				boolean horizontal;	// is obstacle to left/right
+				boolean first_high = (intersection[0] == sides[i][0] && intersection[1] == sides[i][1]);
+				boolean second_high = (intersection[0] == sides[sec_index][0] && intersection[1] == sides[sec_index][1]);
+				horizontal = (first_high == second_high);
+				System.out.println(horizontal);
+				
+				double ang_first_second, ang_path_first, ang_path_second;
+				ang_first_second = calcAngle(angle_first, angle_second, horizontal);
+				ang_path_first = calcAngle(angle_path, angle_first, horizontal);
+				ang_path_second = calcAngle(angle_path, angle_second, horizontal);
+				
+				System.out.println(ang_first_second + " " + ang_path_first + " " + ang_path_second);
+				
+				if(!(ang_path_first >= ang_first_second || ang_path_second >= ang_first_second)) return true;
 			}
 		}
 		return false;
 	}
 
+	
+	private double calcAngle(double a1, double a2, boolean horizontal) {
+		double angle;
+		if((a1 == Math.abs(a1)) == (a2 == Math.abs(a2))) {
+			angle = Math.abs(Math.abs(a1) - Math.abs(a2));
+		} else {
+			if(!horizontal) {
+				angle =		(Math.abs(a1) + Math.abs(a2));
+			} else {
+				angle = 180-(Math.abs(a1) + Math.abs(a2));
+			}
+		}
+		return angle;
+	}
+	
+	
 	
 	
 	// Getters and Setters ----------------------------------------------------

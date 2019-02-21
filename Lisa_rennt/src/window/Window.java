@@ -63,6 +63,7 @@ public class Window extends JFrame{
 		Graphics g = getGraphics();
 		g.setColor(Color.BLACK);
 		for(int i = 0; i < obstacles.length; i++) {
+			g.setColor(new Color(i*30, 0,0));
 			int corners = obstacles[i].getCorners();
 			int[] xPoints = obstacles[i].getXCorners();
 			int[] yPoints = obstacles[i].getYCorners();
