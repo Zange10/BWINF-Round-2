@@ -108,7 +108,7 @@ public class Obstacle {
 //		System.out.println((path_low > highestPoint[1]) + " " + (path_high < lowestPoint[1]) + " " +
 //				(path_right < leftestPoint[0]) + " " + (path_left > rightestPoint[0]));
 		// Path is near the obstacles --------------------
-		System.out.println(highestPoint[1] + " " + lowestPoint[1]);
+//		System.out.println(highestPoint[1] + " " + lowestPoint[1]);
 		if(path_low >= highestPoint[1] || path_high <= lowestPoint[1] ||
 				path_right <= leftestPoint[0] || path_left >= rightestPoint[0]) return false;
 		
@@ -118,6 +118,14 @@ public class Obstacle {
 		
 		// -----------------------------
 		for(int i = 0; i < sides.length; i++) {
+			// is path in range of side
+			boolean b1, b2, b3, b4;
+			b1 = ((x1 < sides[i][0] && x1 < sides[i][2]) && (x2 < sides[i][0] && x2 < sides[i][2]));	// lefter
+			b2 = ((x1 > sides[i][0] && x1 > sides[i][2]) && (x2 > sides[i][0] && x2 > sides[i][2]));	// righter
+			b3 = ((y1 > sides[i][1] && y2 > sides[i][1]));	// higher
+			b4 = ((y1 < sides[i][3] && y2 < sides[i][3]));	// lower
+			if(b1 || b2 || b3 || b4) continue;
+			
 //			System.out.println(sides[i][0] + " " + sides[i][1] + " " + sides[i][2] + " " + sides[i][3]);
 			// high and low values of side
 			int xval_high_side = sides[i][0];
@@ -125,13 +133,12 @@ public class Obstacle {
 			int xval_low_side = sides[i][2];
 			int y_low = sides[i][3];
 			
-			boolean b1, b2, b3, b4;
 			b1 = (sides[i][0] == x1 && sides[i][1] == y1);
 			b2 = (sides[i][2] == x1 && sides[i][3] == y1);
 			b3 = (sides[i][0] == x2 && sides[i][1] == y2);
 			b4 = (sides[i][2] == x2 && sides[i][3] == y2);
-			
-			if(!(b1||b2||b3||b4)) {
+			if((b1 && b4) || (b2 && b3)) return false;
+			else if(!(b1||b2||b3||b4)) {
 				double path_gradient;
 //				if(first_is_left) path_gradient = (double)(y2 - y1) / (double)(x2 - x1);
 //				else path_gradient = (double)(y1 - y2) / (double)(x1 - x2);
@@ -144,6 +151,7 @@ public class Obstacle {
 					// y is y_high or y_low; n is path_low; m is path_gradient
 					int xval_high = (int) Math.round((y_high-n_path)/path_gradient);
 					int xval_low = (int) Math.round((y_low-n_path)/path_gradient);
+//					System.out.println(i);
 //					System.out.println(xval_high + "\t" + xval_low);
 //					System.out.println(xval_high_side + "\t" + xval_low_side);
 					boolean isRightOfSide_high, isRightOfSide_low;
@@ -169,7 +177,7 @@ public class Obstacle {
 				
 				
 			} else {
-				
+				// intersection point
 				int[] intersection = new int[2];
 				if(b1 || b2) {
 					intersection[0] = x1;
@@ -200,6 +208,14 @@ public class Obstacle {
 						else sec_index = 0;
 					}
 				}
+
+				// check if second side is same as path
+				b1 = (sides[sec_index][0] == x1 && sides[sec_index][1] == y1);
+				b2 = (sides[sec_index][2] == x1 && sides[sec_index][3] == y1);
+				b3 = (sides[sec_index][0] == x2 && sides[sec_index][1] == y2);
+				b4 = (sides[sec_index][2] == x2 && sides[sec_index][3] == y2);
+				if((b1 && b4) || (b2 && b3)) return false;
+				
 				
 				double gradient_path, gradient_first, gradient_second;
 				
@@ -219,31 +235,127 @@ public class Obstacle {
 				double angle_second = Math.toDegrees(Math.atan(gradient_second));
 //				if(angle_second < 0) angle_second = 180 + angle_second;
 				
-				System.out.print(sides[i][0] + " " + sides[i][1] + " " + sides[i][2] + " " + sides[i][3] + " (" + i + ") - ");
-				System.out.println(sides[sec_index][0] + " " + sides[sec_index][1] + " " + sides[sec_index][2] + " " + sides[sec_index][3] + " (" + sec_index + ")");
-				System.out.println(" G " + gradient_path + " " + gradient_first + " " + gradient_second);
-				System.out.println(" A " + angle_path + " " + angle_first + " " + angle_second);
+//				System.out.print(sides[i][0] + " " + sides[i][1] + " " + sides[i][2] + " " + sides[i][3] + " (" + i + ") - ");
+//				System.out.println(sides[sec_index][0] + " " + sides[sec_index][1] + " " + sides[sec_index][2] + " " + sides[sec_index][3] + " (" + sec_index + ")");
+//				System.out.println(" G " + gradient_path + " " + gradient_first + " " + gradient_second);
+//				System.out.println(" A " + angle_path + " " + angle_first + " " + angle_second);
 				
 				// calculation
-				boolean horizontal;	// is obstacle to left/right
-				boolean first_high = (intersection[0] == sides[i][0] && intersection[1] == sides[i][1]);
-				boolean second_high = (intersection[0] == sides[sec_index][0] && intersection[1] == sides[sec_index][1]);
-				horizontal = (first_high == second_high);
-				System.out.println(horizontal);
+
+				// is the intersection point the highest point
+				boolean first_is_high = (intersection[0] == sides[i][0] && intersection[1] == sides[i][1]);
+				boolean second_is_high = (intersection[0] == sides[sec_index][0] && intersection[1] == sides[sec_index][1]);
+				boolean path_is_high = (y1 < intersection[1] || y2 < intersection[1]);
 				
-				double ang_first_second, ang_path_first, ang_path_second;
-				ang_first_second = calcAngle(angle_first, angle_second, horizontal);
-				ang_path_first = calcAngle(angle_path, angle_first, horizontal);
-				ang_path_second = calcAngle(angle_path, angle_second, horizontal);
-				
-				System.out.println(ang_first_second + " " + ang_path_first + " " + ang_path_second);
-				
-				if(!(ang_path_first >= ang_first_second || ang_path_second >= ang_first_second)) return true;
+				if(angle_first == 0) {
+					double ang_first_second, ang_path_first, ang_path_second;
+					boolean horizontal;
+					int[] x_values = new int[]{sides[i][0], sides[i][2]};
+					ang_first_second = calcZeroDegAngle(intersection, x_values, second_is_high, gradient_second, angle_second);
+					ang_path_first = calcZeroDegAngle(intersection, x_values, path_is_high, gradient_path, angle_path);
+					horizontal = (path_is_high == second_is_high);
+					ang_path_second = calcAngle(angle_path, angle_second, horizontal);
+					if(!(ang_path_first >= ang_first_second || ang_path_second >= ang_first_second)) return true;
+					
+				} else if(angle_second == 0) {
+					double ang_first_second, ang_path_first, ang_path_second;
+					boolean horizontal;
+					int[] x_values = new int[]{sides[sec_index][0], sides[sec_index][2]};
+					ang_first_second = calcZeroDegAngle(intersection, x_values, first_is_high, gradient_first, angle_first);
+					horizontal = (path_is_high == first_is_high);
+					ang_path_first = calcAngle(angle_path, angle_first, horizontal);
+					ang_path_second = calcZeroDegAngle(intersection, x_values, path_is_high, gradient_path, angle_path);
+					if(!(ang_path_first >= ang_first_second || ang_path_second >= ang_first_second)) return true;
+					
+				} else if(gradient_path == 0) {
+					// can be still in obstacle
+					if((Math.abs(gradient_first) == gradient_first) == (Math.abs(gradient_second) == gradient_second)) continue;
+					else return true;	// can never be the fastes way
+						
+				} else {
+					boolean horizontal;	// is obstacle to left/right
+					horizontal = (first_is_high == second_is_high);
+//					System.out.println(horizontal);
+					
+					double ang_first_second, ang_path_first, ang_path_second;
+					ang_first_second = calcAngle(angle_first, angle_second, horizontal);
+					ang_path_first = calcAngle(angle_path, angle_first, horizontal);
+					ang_path_second = calcAngle(angle_path, angle_second, horizontal);
+					
+//					System.out.println(ang_first_second + " " + ang_path_first + " " + ang_path_second);
+					
+					if(!(ang_path_first >= ang_first_second || ang_path_second >= ang_first_second)) return true;
+				}
 			}
 		}
 		return false;
 	}
 
+	private double calcZeroDegAngle(int[] intersection, int[] x_values, boolean line_is_high, double gradient_line, double angle_line) {
+		double angle;
+		if(x_values[0] < intersection[0] || x_values[1] < intersection[0]) {
+			if(line_is_high) {
+				if(gradient_line > 0) {
+					angle = 	Math.abs(angle_line);	// (Math.abs(angle_first) + Math.abs(angle_second))
+				} else {
+					angle =180-	Math.abs(angle_line);	//	Math.abs(angle_first) = 0
+				}
+			} else {
+				if(gradient_line > 0) {
+					angle =180-	Math.abs(angle_line);
+				} else {
+					angle = 	Math.abs(angle_line);
+				}
+			}
+		} else {
+			if(line_is_high) {
+				if(gradient_line > 0) {
+					angle =180-	Math.abs(angle_line);
+				} else {
+					angle =		Math.abs(angle_line);
+				}
+			} else {
+				if(gradient_line > 0) {
+					angle =		Math.abs(angle_line);
+				} else {
+					angle =180-	Math.abs(angle_line);
+				}
+			}
+		}
+		return angle;
+	}
+	
+	
+//	if(sides[i][0] < intersection[0] || sides[i][2] < intersection[0]) {
+//		if(second_high) {
+//			if(gradient_second > 0) {
+//				ang_first_second = 		Math.abs(angle_second);	// (Math.abs(angle_first) + Math.abs(angle_second))
+//			} else {
+//				ang_first_second = 180-	Math.abs(angle_second);	//	Math.abs(angle_first) = 0
+//			}
+//		} else {
+//			if(gradient_second > 0) {
+//				ang_first_second = 180-	Math.abs(angle_second);
+//			} else {
+//				ang_first_second = 		Math.abs(angle_second);
+//			}
+//		}
+//	} else {
+//		if(second_high) {
+//			if(gradient_second > 0) {
+//				ang_first_second = 180-	Math.abs(angle_second);
+//			} else {
+//				ang_first_second = 		Math.abs(angle_second);
+//			}
+//		} else {
+//			if(gradient_second > 0) {
+//				ang_first_second = 		Math.abs(angle_second);
+//			} else {
+//				ang_first_second = 180- Math.abs(angle_second);
+//			}
+//		}
+//	}
+	
 	
 	private double calcAngle(double a1, double a2, boolean horizontal) {
 		double angle;

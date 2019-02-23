@@ -61,15 +61,15 @@ public class Algorithm {
 			else new_paths[all_corners.size()] = null;
 			all_paths[i] = new_paths;
 		}
-		System.out.println("-----------------------------------------");
+//		System.out.println("-----------------------------------------");
 //		System.out.println(obstacles[0].isOnPath(633, 189, 535, 410));
 //		System.out.println(obstacles[0].isOnPath(115, 120, 450, 200));
 //		System.out.println("-----------------------------------------");
 //		System.out.println(obstacles[0].isOnPath(350, 100, 250, 400));
 //		System.out.println(obstacles[2].isOnPath(193, 80, 331, 287));
-		System.out.println(obstacles[0].isOnPath(200, 100, 100, 200));
-		System.out.println("-----------------------------------------");
-		System.out.println(obstacles[0].isOnPath(200, 100, 200, 200));
+//		System.out.println(obstacles[0].isOnPath(200, 100, 100, 200));
+//		System.out.println("-----------------------------------------");
+//		System.out.println(obstacles[2].isOnPath(390, 260, 331, 287));
 	}
 	
 	public ArrayList<ArrayList<Integer>> caculate() {
