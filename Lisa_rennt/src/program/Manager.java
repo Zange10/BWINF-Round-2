@@ -13,14 +13,18 @@ public class Manager {
 	Algorithm algo;
 	int[] home_pos;
 	ArrayList<int[]> all_corners;
+	int highest, rightest;
 	
 	Manager() {
-		window = new Window(1500,750);
-//		window = new Window(500,300);
+		highest = 0;
+		rightest = 0;
 		all_corners = new ArrayList<int[]>();
 		home_pos = new int[2];
-		parseData("data/lisarennt5.txt");
+		parseData("data/lisarennt4.txt");
+		window = new Window(rightest+150, highest+50);
+		sleep(200);
 		window.drawObstacles(obstacles);
+		window.drawHome(home_pos[0], home_pos[1]);
 		algo = new Algorithm(home_pos, obstacles, all_corners);
 		ArrayList<ArrayList<Integer>> paths = algo.caculate();
 		if(paths != null) {
@@ -54,15 +58,27 @@ public class Manager {
 				for(int j = 0; j < corner_count; j++) {
 					int x = scanner.nextInt();
 					int y = scanner.nextInt();
+					if(x > rightest) rightest = x;
+					if(y > highest) highest = y;
 					obstacles[i].addCorner(x, y, j);
 					all_corners.add(new int[] {x,y});
 				}
 			}
 			home_pos[0] = scanner.nextInt();
 			home_pos[1] = scanner.nextInt();
-			window.drawHome(home_pos[0], home_pos[1]);
+			if(home_pos[0] > rightest) rightest = home_pos[0];
+			if(home_pos[1] > highest) highest = home_pos[1];
 			scanner.close();
 		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void sleep(int millisec) {
+		try {
+			Thread.sleep(millisec);
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -70,12 +70,10 @@ public class Algorithm {
 //		System.out.println(obstacles[0].isOnPath(200, 100, 100, 200));
 		System.out.println("-----------------------------------------");
 		for(int i = 0; i < obstacles.length; i++) {
-			System.out.println(i + " " + obstacles[i].isOnPath(387, 165, 331, 287));
+			System.out.println(i + " " + obstacles[i].isOnPath(410, 175, 380, 155));
 		}
-		
-//		4 390 260 505 213 551 329 413 444
-//		5 410 50 433 50 594 96 525 188 387 165
-//		5 170 80 193 80 340 150 331 287 170 402
+
+//		4 400 125 430 145 410 175 380 155
 	}
 	
 	public ArrayList<ArrayList<Integer>> caculate() {
