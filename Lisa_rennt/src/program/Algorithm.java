@@ -68,8 +68,14 @@ public class Algorithm {
 //		System.out.println(obstacles[0].isOnPath(350, 100, 250, 400));
 //		System.out.println(obstacles[2].isOnPath(193, 80, 331, 287));
 //		System.out.println(obstacles[0].isOnPath(200, 100, 100, 200));
-//		System.out.println("-----------------------------------------");
-//		System.out.println(obstacles[2].isOnPath(390, 260, 331, 287));
+		System.out.println("-----------------------------------------");
+		for(int i = 0; i < obstacles.length; i++) {
+			System.out.println(i + " " + obstacles[i].isOnPath(387, 165, 331, 287));
+		}
+		
+//		4 390 260 505 213 551 329 413 444
+//		5 410 50 433 50 594 96 525 188 387 165
+//		5 170 80 193 80 340 150 331 287 170 402
 	}
 	
 	public ArrayList<ArrayList<Integer>> caculate() {
@@ -101,6 +107,12 @@ public class Algorithm {
 				}
 			}
 		}
+//		ArrayList<Integer> asdf = new ArrayList<Integer>();
+//		asdf.add(505);
+//		asdf.add(213);
+//		asdf.add(340);
+//		asdf.add(150);
+//		routes.add(asdf);
 	}
 	
 	private void calcAllPaths(int pos, int[][][] pos_paths, ArrayList<Integer> routePoints) {
