@@ -191,6 +191,8 @@ public class Obstacle {
 				
 				int sec_index;	// index of second intersecting side
 				
+				// TODO: not always same obstacle
+				
 				if(i > 0) {
 					if((sides[i-1][0] == intersection[0] && sides[i-1][1] == intersection[1]) ||
 							(sides[i-1][2] == intersection[0] && sides[i-1][3] == intersection[1])) {
@@ -269,7 +271,19 @@ public class Obstacle {
 					
 				} else if(gradient_path == 0) {
 					// can be still in obstacle
-					if((Math.abs(gradient_first) == gradient_first) == (Math.abs(gradient_second) == gradient_second)) continue;
+					// TODO: fix some possible thinking errors
+					if((Math.abs(gradient_first) == gradient_first) == (Math.abs(gradient_second) == gradient_second)) {
+						return true; // can never be fastest way
+//						if((Math.abs(gradient_first) == gradient_first)) {
+//							System.out.println(" ++ " + x1 + " " + x2 + " " + intersection[0] + " " + intersection[1]);
+//							if(x1 < intersection[0] || x2 < intersection[0]) return true;//continue;
+//							else return true;
+//						} else {
+//							System.out.println(" -- " + x1 + " " + x2 + " " + intersection[0] + " " + intersection[1]);
+//							if(x1 > intersection[0] || x2 > intersection[0]) return true; //continue;
+//							else return true;
+//						}
+					}
 					else return true;	// can never be the fastes way
 						
 				} else {
