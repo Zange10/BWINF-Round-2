@@ -103,12 +103,7 @@ public class Obstacle {
 			path_high = y2;
 			path_low = y1;
 		}
-//		System.out.println(path_low + " " + highestPoint[1] + " - " + path_high + " " + lowestPoint[1]);
-//		System.out.println(path_right +" " + leftestPoint[0] + " - " + path_left + " " + rightestPoint[0]);
-//		System.out.println((path_low > highestPoint[1]) + " " + (path_high < lowestPoint[1]) + " " +
-//				(path_right < leftestPoint[0]) + " " + (path_left > rightestPoint[0]));
-		// Path is near the obstacles --------------------
-//		System.out.println(highestPoint[1] + " " + lowestPoint[1]);
+		
 		if(path_low >= highestPoint[1] || path_high <= lowestPoint[1] ||
 				path_right <= leftestPoint[0] || path_left >= rightestPoint[0]) return false;
 		
@@ -149,7 +144,6 @@ public class Obstacle {
 				// calculate intersection
 				// m1*x+n1 = m2*x+n2 	(m = gradient; n = intersection with y-axis)
 				// <=> x = (n1-n2) / (m2-m1)
-				System.out.println(path_gradient + " " + n_path + " - " + side_gradient + " " + n_side);
 				if(side_gradient != path_gradient) {
 					if(Double.isFinite(side_gradient) && Double.isFinite(path_gradient)) {
 						double intersection_x = (double) (n_path-n_side) / (double) (side_gradient-path_gradient);
@@ -256,8 +250,6 @@ public class Obstacle {
 					ang_first_second = calcAngle(angle_first, angle_second, first_is_high == second_is_high);
 					ang_path_first = calcAngle(angle_path, angle_first, path_is_high == first_is_high);
 					ang_path_second = calcAngle(angle_path, angle_second, path_is_high == second_is_high);
-					
-					System.out.println(ang_first_second + " " + ang_path_first + " " + ang_path_second);
 					
 					if(!(ang_path_first >= ang_first_second || ang_path_second >= ang_first_second)) return true;
 				}

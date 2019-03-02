@@ -1,5 +1,6 @@
 package program;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -20,8 +21,8 @@ public class Manager {
 		rightest = 0;
 		all_corners = new ArrayList<int[]>();
 		home_pos = new int[2];
-		parseData("data/lisarennt4.txt");
-		window = new Window(rightest+150, highest+50);
+		parseData("data/lisarennt3.txt");
+		window = new Window(rightest+150, highest+100);
 		sleep(200);
 		window.drawObstacles(obstacles);
 		window.drawHome(home_pos[0], home_pos[1]);
@@ -34,14 +35,25 @@ public class Manager {
 					int y1 = pathPoints.get(i*2+1);
 					int x2 = pathPoints.get((i+1)*2);
 					int y2 = pathPoints.get((i+1)*2+1);
-					window.drawPath(x1, y1, x2, y2);
+					window.drawPath(x1, y1, x2, y2, Color.GREEN);
 				}
 		} else {
 			int x1 = home_pos[0];
 			int y1 = home_pos[1];
 			int x2 = 0;
 			int y2 = window.getHeight()/2;
-			window.drawPath(x1, y1, x2, y2);
+			window.drawPath(x1, y1, x2, y2, Color.GREEN);
+		}
+		
+		if(!paths.isEmpty()) {
+			ArrayList<Integer> pathPoints = paths.get(paths.size()-1);
+			for(int i = 0; i < pathPoints.size()/2-1; i++) {
+				int x1 = pathPoints.get(i*2);
+				int y1 = pathPoints.get(i*2+1);
+				int x2 = pathPoints.get((i+1)*2);
+				int y2 = pathPoints.get((i+1)*2+1);
+				window.drawPath(x1, y1, x2, y2, Color.RED);
+			}
 		}
 		
 		System.out.println("finished");
