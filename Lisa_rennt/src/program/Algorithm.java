@@ -3,22 +3,34 @@ package program;
 import java.util.ArrayList;
 
 public class Algorithm {
-	ArrayList<ArrayList<Integer>> routes = new ArrayList<ArrayList<Integer>>();
+	ArrayList<ArrayList<Integer>> routes;
+	ArrayList<Double> distances;
 	Obstacle[] obstacles;
 	int[][][] all_paths;
 	ArrayList<int[]> all_corners;
 	int[] home_pos;
 	int home_index;
 	double shortest_distance;
+	double[] shortest_to_corner;
+	double[] shortest_time;
 	
 	Algorithm(int[] home_pos, Obstacle[] obstacles, ArrayList<int[]> all_corners) {
+		this.routes = new ArrayList<ArrayList<Integer>>();
+		this.distances = new ArrayList<Double>();
 		this.obstacles = obstacles;
 		this.home_pos = home_pos;
-		all_paths = new int[all_corners.size()+1][][];
-		home_index = all_corners.size();
+		this.all_paths = new int[all_corners.size()+1][][];
+		this.home_index = all_corners.size();
 		this.all_corners = all_corners;
 		parseCorners();
 		this.shortest_distance = -1;
+		this.shortest_to_corner = new double[all_corners.size()];
+		for(int i = 0; i < shortest_to_corner.length; i++) {
+			shortest_to_corner[i] = -1;
+		}
+		shortest_time = new double[2];
+		shortest_time[0] = 0;
+		shortest_time[1] = 0;
 	}
 	
 	private void parseCorners() {
@@ -65,7 +77,7 @@ public class Algorithm {
 		}
 	}
 	
-	public ArrayList<ArrayList<Integer>> caculate() {
+	public ArrayList<Integer> caculate() {
 		ArrayList<Integer> routePoints = new ArrayList<Integer>();
 		int lastX = home_pos[0];
 		int lastY = home_pos[1];
@@ -76,17 +88,26 @@ public class Algorithm {
 		
 //		showAllPaths();
 		
-		calcAllPaths(home_index, all_paths, routePoints, 0);	
-		System.out.println(routes.size());
-		for(ArrayList<Integer> a : routes) {
-			for(int i : a) {
-				System.out.print(i + " ");
-			}
-			System.out.println("");
-		}
+		calcAllPaths(home_index, all_paths, routePoints, 0);
 		
-		System.out.println(routes.size());
-		return routes;
+		ArrayList<Integer> final_route = new ArrayList<Integer>();
+		double best_time = 0;
+		for(int i = 0; i < distances.size(); i++) {
+			double walk_vel = 15.0/3.6;	// walk velocity (15 km/h to ~4 m/s)
+			double walk_time = distances.get(i)/walk_vel;	// time to walk distance at 15 km/h
+			double bus_vel = 30.0/3.6;
+			double bus_loc = routes.get(i).get(routes.get(i).size()-1);
+			double bus_time = bus_loc/bus_vel;	// bus velocity (30 km/h to ~8 m/s)
+			double time = bus_time-walk_time;
+			if(time > best_time || i == 0) {
+				best_time = time;
+				final_route = routes.get(i);
+				shortest_time[0] = time;
+				shortest_time[1] = bus_time;
+			}
+		}
+		System.out.println(best_time);
+		return final_route;
 	}
 	
 	private void showAllPaths() {
@@ -105,35 +126,34 @@ public class Algorithm {
 	
 	private void calcAllPaths(int pos, int[][][] pos_paths, ArrayList<Integer> routePoints, double distance) {
 		int[][][] rem_paths = copy3DArray(pos_paths);
-		for(int i = 0; i < rem_paths[pos].length-1; i++) {
-			if(pos == home_index) System.out.println(i + " -------------------------------");
-			if(rem_paths[pos][i] != null) {
-				ArrayList<Integer> buf_pathPoints = (ArrayList<Integer>) routePoints.clone();
-				int x = rem_paths[pos][i][2];
-				int y = rem_paths[pos][i][3];
-				buf_pathPoints.add(x);
-				buf_pathPoints.add(y);
-				double new_distance = distance + calcDistance(buf_pathPoints);
-				if(new_distance < shortest_distance || shortest_distance < 0) {
-					rem_paths[pos][i] = null;
-					if(pos < 3) rem_paths[i][pos] = null;
-					calcAllPaths(i, rem_paths, buf_pathPoints, new_distance);
-					rem_paths[pos][i] = copyArray(pos_paths[pos][i]);
-					if(pos < 3) rem_paths[i][pos] = copyArray(pos_paths[i][pos]);
+		if(rem_paths[pos][rem_paths[pos].length-1] == null) {	// if now path to road exists
+			for(int i = 0; i < rem_paths[pos].length-1; i++) {
+				if(rem_paths[pos][i] != null) {
+					ArrayList<Integer> buf_pathPoints = (ArrayList<Integer>) routePoints.clone();
+					int x = rem_paths[pos][i][2];
+					int y = rem_paths[pos][i][3];
+					buf_pathPoints.add(x);
+					buf_pathPoints.add(y);
+					double new_distance = distance + calcDistance(buf_pathPoints);
+					if(new_distance < shortest_to_corner[i] || shortest_to_corner[i] < 0) {
+						shortest_to_corner[i] = new_distance;
+						rem_paths[pos][i] = null;
+						if(pos < 3) rem_paths[i][pos] = null;
+						calcAllPaths(i, rem_paths, buf_pathPoints, new_distance);
+						rem_paths[pos][i] = copyArray(pos_paths[pos][i]);
+						if(pos < 3) rem_paths[i][pos] = copyArray(pos_paths[i][pos]);
+					}
 				}
 			}
-		}
-		if(rem_paths[pos][rem_paths[pos].length-1] != null) {
+		} else {
 			int x = 0;
 			int y = rem_paths[pos][rem_paths[pos].length-1][3];
 			routePoints.add(x);
 			routePoints.add(y);
 			distance += calcDistance(routePoints);
-			if(distance < shortest_distance || shortest_distance < 0) {
-				shortest_distance = distance;
-				routes.add(routePoints);
-				System.out.println(shortest_distance);
-			}
+			shortest_distance = distance;
+			routes.add(routePoints);
+			distances.add(distance);
 		}
 	}
 	
@@ -181,5 +201,9 @@ public class Algorithm {
 		double b = buf_pathPoints.get(size-3) - buf_pathPoints.get(size-1);
 		
 		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));	// a^2 + b^2 = c^2
+	}
+	
+	public double[] getTime() {
+		return shortest_time;
 	}
 }
