@@ -88,11 +88,12 @@ public class Algorithm {
 		routePoints.add(lastY);
 		
 		calcAllPaths(home_index, all_paths, routePoints, 0);
-//		System.out.println("-----------------------------------------");
-//		for(int i = 0; i < obstacles.length; i++) {
-//			System.out.println(i + " " + obstacles[i].isOnPath(100, 200, 200, 200));
-//		}
-//		System.out.println("-----------------------------------------");
+		System.out.println("-----------------------------------------");
+		for(int i = 0; i < obstacles.length; i++) {
+			System.out.println(i + " " + obstacles[i].isOnPath(80, 250, 80, 700));
+//			System.out.println(i + " " + obstacles[i].isOnPath(740, 340, 700, 340));
+		}
+		System.out.println("-----------------------------------------");
 //		
 //		return routes;
 		
@@ -113,7 +114,7 @@ public class Algorithm {
 				shortest_time[0] = time;
 				shortest_time[1] = bus_time;
 			}
-			System.out.println(best_time);
+//			System.out.println(best_time);
 		}
 		return final_route;
 	}
@@ -231,7 +232,7 @@ public class Algorithm {
 		double bus_loc = routes.get(index).get(routes.get(index).size()-1);
 		double bus_time = bus_loc/bus_vel;	// bus velocity (30 km/h to ~8 m/s)
 		double time = bus_time-walk_time;
-		System.out.println("--- " + time);
+//		System.out.println("--- " + time);
 		return route;
 	}
 	

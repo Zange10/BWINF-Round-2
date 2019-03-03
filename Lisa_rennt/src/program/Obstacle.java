@@ -103,10 +103,10 @@ public class Obstacle {
 			path_high = y2;
 			path_low = y1;
 		}
-		if(path_low >= highestPoint[1] || path_high <= lowestPoint[1] ||
-				path_right <= leftestPoint[0] || path_left >= rightestPoint[0]) return false;
-//		if(path_low > highestPoint[1] || path_high < lowestPoint[1] ||
-//				path_right < leftestPoint[0] || path_left > rightestPoint[0]) return false;
+//		if(path_low >= highestPoint[1] || path_high <= lowestPoint[1] ||
+//				path_right <= leftestPoint[0] || path_left >= rightestPoint[0]) return false;
+		if(path_low > highestPoint[1] || path_high < lowestPoint[1] ||
+				path_right < leftestPoint[0] || path_left > rightestPoint[0]) return false;
 		// -----------------------------
 		for(int i = 0; i < sides.length; i++) {
 			// is path in range of side
@@ -142,7 +142,31 @@ public class Obstacle {
 				if(side_gradient != path_gradient) {
 					if(Double.isFinite(side_gradient) && Double.isFinite(path_gradient)) {
 						double intersection_x = (double) (n_path-n_side) / (double) (side_gradient-path_gradient);
+						double intersection_y = (double) path_gradient * intersection_x + n_path;
 						if((intersection_x > x1) == (intersection_x < x2) && (intersection_x > sides[i][0]) == (intersection_x < sides[i][2])) return true;
+						if(side_gradient != path_gradient) {
+							if((int)intersection_x == x1) {
+								if((int) intersection_y == y1) {
+									if(((intersection_x > sides[i][0]) && (intersection_x < sides[i][2])) ||
+											((intersection_x < sides[i][0]) && (intersection_x > sides[i][2]))) return true;
+								}
+							} else if((int)intersection_x == x2) {
+								if((int) intersection_y == y2) {
+									if(((intersection_x > sides[i][0]) == (intersection_x < sides[i][2])) ||
+											((intersection_x < sides[i][0]) && (intersection_x > sides[i][2]))) return true;
+								}
+							} else if((int)intersection_x == sides[i][0]) {
+								if((int) intersection_y == sides[i][1]) {
+									if(((intersection_x > x1) == (intersection_x < x2)) ||
+										((intersection_x < x1) && (intersection_x > x2))) return true;
+								}
+							} else if((int)intersection_x == sides[i][2]) {
+								if((int) intersection_y == sides[i][3]) {
+									if(((intersection_x > x1) == (intersection_x < x2)) ||
+											((intersection_x < x1) && (intersection_x > x2))) return true;
+								}
+							}
+						}
 					} else {
 						if(Double.isInfinite(side_gradient)) {
 							double intersection_x = sides[i][0];
@@ -193,7 +217,7 @@ public class Obstacle {
 				b2 = (sides[sec_index][2] == x1 && sides[sec_index][3] == y1);
 				b3 = (sides[sec_index][0] == x2 && sides[sec_index][1] == y2);
 				b4 = (sides[sec_index][2] == x2 && sides[sec_index][3] == y2);
-				if((b1 && b4) || (b2 && b3)) return false;
+				if((b1 && b4) || (b2 && b3)) continue;
 				
 				
 				double gradient_path, gradient_first, gradient_second;
@@ -201,13 +225,36 @@ public class Obstacle {
 				gradient_path = (double)(y2 - y1) / (double)(x2 - x1);
 				gradient_first = (double)(sides[i][3] - sides[i][1]) / (double)(sides[i][2] - sides[i][0]);
 				gradient_second = (double)(sides[sec_index][3] - sides[sec_index][1]) / (double)(sides[sec_index][2] - sides[sec_index][0]);
-				
-				if(gradient_path == gradient_first) {	// every path is some time first
+
+				// (Double.isInfinite(gradient_path) && Double.isInfinite(gradient_first) --> -Infinity and Infinity are equal
+				if(gradient_path == gradient_first || (Double.isInfinite(gradient_path) && Double.isInfinite(gradient_first))) {
 					// if it stops on path
 					if((x1 > sides[i][0]) && (x1 < sides[i][2]) || (x1 < sides[i][0]) && (x1 > sides[i][2])) {
 						return true;
 					} else if((x2 > sides[i][0]) && (x2 < sides[i][2]) || (x2 < sides[i][0]) && (x2 > sides[i][2])) {
 						return true;
+					} else if((y1 > sides[i][1]) && (y1 < sides[i][3]) || (y1 < sides[i][1]) && (y1 > sides[i][3])) {
+						return true;
+					} else if((y2 > sides[i][1]) && (y2 < sides[i][3]) || (y2 < sides[i][1]) && (y2 > sides[i][3])) {
+						return true;
+					} else {
+						// cannot collide with this path, because identical, but goes further
+						continue;
+					}
+					// (Double.isInfinite(gradient_path) && Double.isInfinite(gradient_first) --> -Infinity and Infinity are equal
+				} else if(gradient_path == gradient_second || (Double.isInfinite(gradient_path) && Double.isInfinite(gradient_second))) {
+					// stops on path
+					if((x1 > sides[sec_index][0]) && (x1 < sides[sec_index][2]) || (x1 < sides[sec_index][0]) && (x1 > sides[sec_index][2])) {
+						return true;
+					} else if((x2 > sides[sec_index][0]) && (x2 < sides[sec_index][2]) || (x2 < sides[sec_index][0]) && (x2 > sides[sec_index][2])) {
+						return true;
+					} else if((y1 > sides[sec_index][1]) && (y1 < sides[sec_index][3]) || (y1 < sides[sec_index][1]) && (y1 > sides[sec_index][3])) {
+						return true;
+					} else if((y2 > sides[sec_index][1]) && (y2 < sides[sec_index][3]) || (y2 < sides[sec_index][1]) && (y2 > sides[sec_index][3])) {
+						return true;
+					} else {
+						// cannot collide with this path, because identical, but goes further
+						continue;
 					}
 				}
 				
