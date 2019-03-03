@@ -103,14 +103,10 @@ public class Obstacle {
 			path_high = y2;
 			path_low = y1;
 		}
-		
 		if(path_low >= highestPoint[1] || path_high <= lowestPoint[1] ||
 				path_right <= leftestPoint[0] || path_left >= rightestPoint[0]) return false;
-		
-		
-		// TODO: fix code below (gradient infinity)
-		
-		
+//		if(path_low > highestPoint[1] || path_high < lowestPoint[1] ||
+//				path_right < leftestPoint[0] || path_left > rightestPoint[0]) return false;
 		// -----------------------------
 		for(int i = 0; i < sides.length; i++) {
 			// is path in range of side
@@ -121,12 +117,11 @@ public class Obstacle {
 			b4 = ((y1 < sides[i][3] && y2 < sides[i][3]));	// lower
 			if(b1 || b2 || b3 || b4) continue;
 			
-//			System.out.println(sides[i][0] + " " + sides[i][1] + " " + sides[i][2] + " " + sides[i][3]);
 			// high and low values of side
-			int xval_high_side = sides[i][0];
-			int y_high = sides[i][1];
-			int xval_low_side = sides[i][2];
-			int y_low = sides[i][3];
+//			int xval_high_side = sides[i][0];
+//			int y_high = sides[i][1];
+//			int xval_low_side = sides[i][2];
+//			int y_low = sides[i][3];
 			
 			b1 = (sides[i][0] == x1 && sides[i][1] == y1);
 			b2 = (sides[i][2] == x1 && sides[i][3] == y1);
@@ -159,6 +154,8 @@ public class Obstacle {
 							if(y1 > side_inters_y == y2 < side_inters_y) return true;
 						}
 					}
+				} else {
+					if(n_path == n_side) return true;
 				}
 			} else {
 				// intersection point
@@ -205,15 +202,19 @@ public class Obstacle {
 				gradient_first = (double)(sides[i][3] - sides[i][1]) / (double)(sides[i][2] - sides[i][0]);
 				gradient_second = (double)(sides[sec_index][3] - sides[sec_index][1]) / (double)(sides[sec_index][2] - sides[sec_index][0]);
 				
+				if(gradient_path == gradient_first) {	// every path is some time first
+					// if it stops on path
+					if((x1 > sides[i][0]) && (x1 < sides[i][2]) || (x1 < sides[i][0]) && (x1 > sides[i][2])) {
+						return true;
+					} else if((x2 > sides[i][0]) && (x2 < sides[i][2]) || (x2 < sides[i][0]) && (x2 > sides[i][2])) {
+						return true;
+					}
+				}
+				
 				// angle to x-axis
 				double angle_path = Math.toDegrees(Math.atan(gradient_path));
 				double angle_first = Math.toDegrees(Math.atan(gradient_first));
 				double angle_second = Math.toDegrees(Math.atan(gradient_second));
-				
-//				System.out.print(sides[i][0] + " " + sides[i][1] + " " + sides[i][2] + " " + sides[i][3] + " (" + i + ") - ");
-//				System.out.println(sides[sec_index][0] + " " + sides[sec_index][1] + " " + sides[sec_index][2] + " " + sides[sec_index][3] + " (" + sec_index + ")");
-//				System.out.println(" G " + gradient_path + " " + gradient_first + " " + gradient_second);
-//				System.out.println(" A " + angle_path + " " + angle_first + " " + angle_second);
 				
 				// calculation
 

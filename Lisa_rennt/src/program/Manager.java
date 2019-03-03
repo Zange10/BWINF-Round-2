@@ -21,19 +21,52 @@ public class Manager {
 		rightest = 0;
 		all_corners = new ArrayList<int[]>();
 		home_pos = new int[2];
-		parseData("data/lisarennt2.txt");
+		parseData("data/lisarennt3.txt");
+		algo = new Algorithm(home_pos, obstacles, all_corners);
+		ArrayList<Integer> route = algo.caculate();
+		ArrayList<ArrayList<Integer>> paths = algo.getAllPaths();
+		
+		System.out.println(highest + " ------------------ " + route.get(route.size()-1));
+		if(route.get(route.size()-1) > highest) highest = route.get(route.size()-1);
 		window = new Window(rightest+250, highest+100);
 		sleep(200);
 		window.drawObstacles(obstacles);
 		window.drawHome(home_pos[0], home_pos[1]);
-		algo = new Algorithm(home_pos, obstacles, all_corners);
-		ArrayList<Integer> route = algo.caculate();
+		
+		if(paths != null) {
+			for(ArrayList<Integer> pathPoints : paths)
+				for(int i = 0; i < pathPoints.size()/2-1; i++) {
+					int x1 = pathPoints.get(i*2);
+					int y1 = pathPoints.get(i*2+1);
+					int x2 = pathPoints.get((i+1)*2);
+					int y2 = pathPoints.get((i+1)*2+1);
+					window.drawPath(x1, y1, x2, y2, Color.GREEN);
+				}
+		} else {
+			int x1 = home_pos[0];
+			int y1 = home_pos[1];
+			int x2 = 0;
+			int y2 = window.getHeight()/2;
+			window.drawPath(x1, y1, x2, y2, Color.GREEN);
+		}
+		
+
 		for(int i = 0; i < route.size()/2-1; i++) {
 			int x1 = route.get(i*2);
 			int y1 = route.get(i*2+1);
 			int x2 = route.get((i+1)*2);
 			int y2 = route.get((i+1)*2+1);
-			window.drawPath(x1, y1, x2, y2, Color.GREEN);
+			System.out.println(x2 + " " + y2);
+			window.drawPath(x1, y1, x2, y2, Color.RED);
+		}
+		
+		ArrayList<Integer> fastest = algo.getFastest();
+		for(int i = 0; i < fastest.size()/2-1; i++) {
+			int x1 = fastest.get(i*2);
+			int y1 = fastest.get(i*2+1);
+			int x2 = fastest.get((i+1)*2);
+			int y2 = fastest.get((i+1)*2+1);
+			window.drawPath(x1, y1, x2, y2, Color.BLUE);
 		}
 		
 		window.writeTime(algo.getTime(), home_pos[0], home_pos[1], 0, route.get(route.size()-1));

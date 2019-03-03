@@ -46,7 +46,7 @@ public class Algorithm {
 		int home_x1 = home_pos[0];
 		int home_y1 = home_pos[1];
 		int home_x2 = 0;
-		int home_y2 = home_pos[1];
+		int home_y2 = (int) (home_pos[1] + home_pos[0]/Math.sqrt(3));	// fastest way: m = x/3^0.5
 		if(!(intersectsWithAnyObstacle(home_x1, home_y1, home_x2, home_y2))) {
 			home_paths[all_corners.size()] = new int[]{home_x1, home_y1, home_x2, home_y2};
 		}
@@ -70,7 +70,8 @@ public class Algorithm {
 			int x1 = all_corners.get(i)[0];
 			int y1 = all_corners.get(i)[1];
 			int x2 = 0;
-			int y2 = all_corners.get(i)[1];
+			int y2 = (int) (all_corners.get(i)[1] + all_corners.get(i)[0]/Math.sqrt(3));	// fastest way: m = x/3^0.5
+//			int y2 = all_corners.get(i)[1];
 			if(!(intersectsWithAnyObstacle(x1, y1, x2, y2))) new_paths[all_corners.size()] = new int[]{x1, y1, x2, y2};
 			else new_paths[all_corners.size()] = null;
 			all_paths[i] = new_paths;
@@ -86,9 +87,16 @@ public class Algorithm {
 		routePoints.add(lastX);
 		routePoints.add(lastY);
 		
-//		showAllPaths();
-		
 		calcAllPaths(home_index, all_paths, routePoints, 0);
+//		System.out.println("-----------------------------------------");
+//		for(int i = 0; i < obstacles.length; i++) {
+//			System.out.println(i + " " + obstacles[i].isOnPath(100, 200, 200, 200));
+//		}
+//		System.out.println("-----------------------------------------");
+//		
+//		return routes;
+		
+		
 		
 		ArrayList<Integer> final_route = new ArrayList<Integer>();
 		double best_time = 0;
@@ -105,23 +113,9 @@ public class Algorithm {
 				shortest_time[0] = time;
 				shortest_time[1] = bus_time;
 			}
+			System.out.println(best_time);
 		}
-		System.out.println(best_time);
 		return final_route;
-	}
-	
-	private void showAllPaths() {
-		for(int[][] a : all_paths) {
-			for(int[] p : a) {
-				if(p != null) {
-					ArrayList<Integer> points = new ArrayList<Integer>();
-					for(int c : p) {
-						points.add(c);
-					}
-					routes.add(points);
-				}
-			}
-		}
 	}
 	
 	private void calcAllPaths(int pos, int[][][] pos_paths, ArrayList<Integer> routePoints, double distance) {
@@ -201,6 +195,44 @@ public class Algorithm {
 		double b = buf_pathPoints.get(size-3) - buf_pathPoints.get(size-1);
 		
 		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));	// a^2 + b^2 = c^2
+	}
+	
+	public ArrayList<ArrayList<Integer>> getAllPaths() {
+		ArrayList<ArrayList<Integer>> allPaths = new ArrayList<ArrayList<Integer>>();
+		for(int[][] a : all_paths) {
+			for(int[] p : a) {
+				if(p != null) {
+					ArrayList<Integer> points = new ArrayList<Integer>();
+					for(int c : p) {
+						points.add(c);
+					}
+					allPaths.add(points);
+				}
+			}
+		}
+		return allPaths;
+	}
+	
+	public ArrayList<Integer> getFastest() {
+		ArrayList<Integer> route = new ArrayList<Integer>();
+		int index = 0;
+		double shortest = distances.get(0);
+		for(int i = 0; i < distances.size(); i++) {
+			if(distances.get(i) <= shortest) {
+				shortest = distances.get(i);
+				route = routes.get(i);
+				index = i;
+			}
+		}
+		
+		double walk_vel = 15.0/3.6;	// walk velocity (15 km/h to ~4 m/s)
+		double walk_time = distances.get(index)/walk_vel;	// time to walk distance at 15 km/h
+		double bus_vel = 30.0/3.6;
+		double bus_loc = routes.get(index).get(routes.get(index).size()-1);
+		double bus_time = bus_loc/bus_vel;	// bus velocity (30 km/h to ~8 m/s)
+		double time = bus_time-walk_time;
+		System.out.println("--- " + time);
+		return route;
 	}
 	
 	public double[] getTime() {
