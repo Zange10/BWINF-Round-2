@@ -71,7 +71,6 @@ public class Algorithm {
 			int y1 = all_corners.get(i)[1];
 			int x2 = 0;
 			int y2 = (int) (all_corners.get(i)[1] + all_corners.get(i)[0]/Math.sqrt(3));	// fastest way: m = x/3^0.5
-//			int y2 = all_corners.get(i)[1];
 			if(!(intersectsWithAnyObstacle(x1, y1, x2, y2))) new_paths[all_corners.size()] = new int[]{x1, y1, x2, y2};
 			else new_paths[all_corners.size()] = null;
 			all_paths[i] = new_paths;
@@ -88,12 +87,11 @@ public class Algorithm {
 		routePoints.add(lastY);
 		
 		calcAllPaths(home_index, all_paths, routePoints, 0);
-		System.out.println("-----------------------------------------");
-		for(int i = 0; i < obstacles.length; i++) {
-			System.out.println(i + " " + obstacles[i].isOnPath(80, 250, 80, 700));
-//			System.out.println(i + " " + obstacles[i].isOnPath(740, 340, 700, 340));
-		}
-		System.out.println("-----------------------------------------");
+//		System.out.println("-----------------------------------------");
+//		for(int i = 0; i < obstacles.length; i++) {
+//			System.out.println(i + " " + obstacles[i].isOnPath(380, 208, 380, 228));
+//		}
+//		System.out.println("-----------------------------------------");
 //		
 //		return routes;
 		

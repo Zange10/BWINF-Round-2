@@ -22,7 +22,7 @@ public class Manager {
 		all_corners = new ArrayList<int[]>();
 		home_pos = new int[2];
 //		parseData("data/example4.txt");
-		parseData("data/lisarennt5.txt");
+		parseData("data/lisarennt3.txt");
 		algo = new Algorithm(home_pos, obstacles, all_corners);
 		ArrayList<Integer> route = algo.caculate();
 		ArrayList<ArrayList<Integer>> paths = algo.getAllPaths();
@@ -40,7 +40,7 @@ public class Manager {
 					int y1 = pathPoints.get(i*2+1);
 					int x2 = pathPoints.get((i+1)*2);
 					int y2 = pathPoints.get((i+1)*2+1);
-					window.drawPath(x1, y1, x2, y2, Color.BLUE);
+					window.drawPath(x1, y1, x2, y2, Color.CYAN);
 				}
 		} else {
 			int x1 = home_pos[0];

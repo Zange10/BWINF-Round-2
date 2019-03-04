@@ -1,27 +1,28 @@
 package program;
 
 public class Obstacle {
-	int[] xCorners, yCorners; //, xCorners_win, yCorners_win;
+	int[] xCorners, yCorners, angles; //, xCorners_win, yCorners_win;
 	int[][] sides;
-	int corners;
+	int corner_count;
 	int[] highestPoint, lowestPoint, rightestPoint, leftestPoint;
 	
 	Obstacle(int corner_count) {
-		xCorners = new int[corner_count];
-		yCorners = new int[corner_count];
-		sides = new int[corner_count][4];
+		this.xCorners = new int[corner_count];
+		this.yCorners = new int[corner_count];
+		this.angles = new int[corner_count];
+		this.sides = new int[corner_count][5];
 //		xCorners_win = new int[corner_count];
 //		yCorners_win = new int[corner_count];
-		highestPoint = new int[3];
-		lowestPoint  = new int[3];
-		rightestPoint = new int[3];
-		leftestPoint = new int[3];
-		corners = corner_count;
+		this.highestPoint = new int[3];
+		this.lowestPoint  = new int[3];
+		this.rightestPoint = new int[3];
+		this.leftestPoint = new int[3];
+		this.corner_count = corner_count;
 		
-		highestPoint[1] = 0;
-		lowestPoint[1] = 10000;
-		rightestPoint[0] = 0;
-		leftestPoint[0] = 10000;
+		this.highestPoint[1] = 0;
+		this.lowestPoint[1] = 10000;
+		this.rightestPoint[0] = 0;
+		this.leftestPoint[0] = 10000;
 	}
 	
 	public void addCorner(int x, int y, int index) {
@@ -67,7 +68,7 @@ public class Obstacle {
 				sides[index-1][3] = yCorners[index-1];
 			}
 		} 
-		if(index >= corners-1) {
+		if(index >= corner_count-1) {
 			if(yCorners[0] > y) {
 				sides[index][0] = xCorners[0];
 				sides[index][1] = yCorners[0];
@@ -117,70 +118,15 @@ public class Obstacle {
 			b4 = ((y1 < sides[i][3] && y2 < sides[i][3]));	// lower
 			if(b1 || b2 || b3 || b4) continue;
 			
-			// high and low values of side
-//			int xval_high_side = sides[i][0];
-//			int y_high = sides[i][1];
-//			int xval_low_side = sides[i][2];
-//			int y_low = sides[i][3];
-			
 			b1 = (sides[i][0] == x1 && sides[i][1] == y1);
 			b2 = (sides[i][2] == x1 && sides[i][3] == y1);
 			b3 = (sides[i][0] == x2 && sides[i][1] == y2);
 			b4 = (sides[i][2] == x2 && sides[i][3] == y2);
-			if((b1 && b4) || (b2 && b3)) return false;
-			else if(!(b1||b2||b3||b4)) {
-				double path_gradient, side_gradient;
-				path_gradient = (double)(y2 - y1) / (double)(x2 - x1);
-				side_gradient = (double)(sides[i][3] - sides[i][1]) / (double)(sides[i][2] - sides[i][0]);
-				double n_path, n_side;
-				n_path = -(path_gradient*x1-y1); // intersection with y-axis
-				n_side = -(side_gradient*sides[i][0]-sides[i][1]);
+//			if((b1 && b4) || (b2 && b3)) return false;
+			if(!(b1||b2||b3||b4)) {
 				
-				// calculate intersection
-				// m1*x+n1 = m2*x+n2 	(m = gradient; n = intersection with y-axis)
-				// <=> x = (n1-n2) / (m2-m1)
-				if(side_gradient != path_gradient) {
-					if(Double.isFinite(side_gradient) && Double.isFinite(path_gradient)) {
-						double intersection_x = (double) (n_path-n_side) / (double) (side_gradient-path_gradient);
-						double intersection_y = (double) path_gradient * intersection_x + n_path;
-						if((intersection_x > x1) == (intersection_x < x2) && (intersection_x > sides[i][0]) == (intersection_x < sides[i][2])) return true;
-						if(side_gradient != path_gradient) {
-							if((int)intersection_x == x1) {
-								if((int) intersection_y == y1) {
-									if(((intersection_x > sides[i][0]) && (intersection_x < sides[i][2])) ||
-											((intersection_x < sides[i][0]) && (intersection_x > sides[i][2]))) return true;
-								}
-							} else if((int)intersection_x == x2) {
-								if((int) intersection_y == y2) {
-									if(((intersection_x > sides[i][0]) == (intersection_x < sides[i][2])) ||
-											((intersection_x < sides[i][0]) && (intersection_x > sides[i][2]))) return true;
-								}
-							} else if((int)intersection_x == sides[i][0]) {
-								if((int) intersection_y == sides[i][1]) {
-									if(((intersection_x > x1) == (intersection_x < x2)) ||
-										((intersection_x < x1) && (intersection_x > x2))) return true;
-								}
-							} else if((int)intersection_x == sides[i][2]) {
-								if((int) intersection_y == sides[i][3]) {
-									if(((intersection_x > x1) == (intersection_x < x2)) ||
-											((intersection_x < x1) && (intersection_x > x2))) return true;
-								}
-							}
-						}
-					} else {
-						if(Double.isInfinite(side_gradient)) {
-							double intersection_x = sides[i][0];
-							double path_inters_y = path_gradient*intersection_x+n_path;
-							if(sides[i][1] > path_inters_y == sides[i][3] < path_inters_y) return true;
-						} else {
-							double intersection_x = x1;
-							double side_inters_y = side_gradient*intersection_x+n_side;
-							if(y1 > side_inters_y == y2 < side_inters_y) return true;
-						}
-					}
-				} else {
-					if(n_path == n_side) return true;
-				}
+				if(intersectsWithSide(x1, x2, y1, y2, i)) return true;
+				
 			} else {
 				// intersection point
 				int[] intersection = new int[2];
@@ -199,15 +145,15 @@ public class Obstacle {
 							(sides[i-1][2] == intersection[0] && sides[i-1][3] == intersection[1])) {
 						sec_index = i-1;
 					} else {
-						if(i < corners-1) sec_index = i+1;
+						if(i < corner_count-1) sec_index = i+1;
 						else sec_index = 0;
 					}
 				} else {
-					if((sides[corners-1][0] == intersection[0] && sides[corners-1][1] == intersection[1]) ||
-							(sides[corners-1][2] == intersection[0] && sides[corners-1][3] == intersection[1])) {
-						sec_index = corners-1;
+					if((sides[corner_count-1][0] == intersection[0] && sides[corner_count-1][1] == intersection[1]) ||
+							(sides[corner_count-1][2] == intersection[0] && sides[corner_count-1][3] == intersection[1])) {
+						sec_index = corner_count-1;
 					} else {
-						if(i < corners-1) sec_index = i+1;
+						if(i < corner_count-1) sec_index = i+1;
 						else sec_index = 0;
 					}
 				}
@@ -217,7 +163,9 @@ public class Obstacle {
 				b2 = (sides[sec_index][2] == x1 && sides[sec_index][3] == y1);
 				b3 = (sides[sec_index][0] == x2 && sides[sec_index][1] == y2);
 				b4 = (sides[sec_index][2] == x2 && sides[sec_index][3] == y2);
-				if((b1 && b4) || (b2 && b3)) continue;
+//				if((b1 && b4) || (b2 && b3)) continue;
+				
+
 				
 				
 				double gradient_path, gradient_first, gradient_second;
@@ -225,6 +173,18 @@ public class Obstacle {
 				gradient_path = (double)(y2 - y1) / (double)(x2 - x1);
 				gradient_first = (double)(sides[i][3] - sides[i][1]) / (double)(sides[i][2] - sides[i][0]);
 				gradient_second = (double)(sides[sec_index][3] - sides[sec_index][1]) / (double)(sides[sec_index][2] - sides[sec_index][0]);
+				
+				// angle to x-axis
+				double angle_path = Math.toDegrees(Math.atan(gradient_path));
+				double angle_first = Math.toDegrees(Math.atan(gradient_first));
+				double angle_second = Math.toDegrees(Math.atan(gradient_second));
+
+				// is the intersection point the highest point
+				boolean first_is_high = (intersection[0] == sides[i][0] && intersection[1] == sides[i][1]);
+				boolean second_is_high = (intersection[0] == sides[sec_index][0] && intersection[1] == sides[sec_index][1]);
+				boolean path_is_high = (y1 < intersection[1] || y2 < intersection[1]);
+
+				double n_path = -(gradient_path*x1-y1); // intersection with y-axis
 
 				// (Double.isInfinite(gradient_path) && Double.isInfinite(gradient_first) --> -Infinity and Infinity are equal
 				if(gradient_path == gradient_first || (Double.isInfinite(gradient_path) && Double.isInfinite(gradient_first))) {
@@ -257,21 +217,10 @@ public class Obstacle {
 						continue;
 					}
 				}
-				
-				// angle to x-axis
-				double angle_path = Math.toDegrees(Math.atan(gradient_path));
-				double angle_first = Math.toDegrees(Math.atan(gradient_first));
-				double angle_second = Math.toDegrees(Math.atan(gradient_second));
-				
-				// calculation
 
-				// is the intersection point the highest point
-				boolean first_is_high = (intersection[0] == sides[i][0] && intersection[1] == sides[i][1]);
-				boolean second_is_high = (intersection[0] == sides[sec_index][0] && intersection[1] == sides[sec_index][1]);
-				boolean path_is_high = (y1 < intersection[1] || y2 < intersection[1]);
+				double ang_first_second, ang_path_first, ang_path_second;
 				
 				if(angle_first == 0) {
-					double ang_first_second, ang_path_first, ang_path_second;
 					boolean horizontal;
 					int[] x_values = new int[]{sides[i][0], sides[i][2]};
 					ang_first_second = calcZeroDegAngle(intersection, x_values, second_is_high, gradient_second, angle_second);
@@ -281,7 +230,6 @@ public class Obstacle {
 					if(!(ang_path_first >= ang_first_second || ang_path_second >= ang_first_second)) return true;
 					
 				} else if(angle_second == 0) {
-					double ang_first_second, ang_path_first, ang_path_second;
 					boolean horizontal;
 					int[] x_values = new int[]{sides[sec_index][0], sides[sec_index][2]};
 					ang_first_second = calcZeroDegAngle(intersection, x_values, first_is_high, gradient_first, angle_first);
@@ -294,15 +242,103 @@ public class Obstacle {
 					// can be still in obstacle
 					if(!(first_is_high == second_is_high)) return true;
 				} else {
-					double ang_first_second, ang_path_first, ang_path_second;
 					ang_first_second = calcAngle(angle_first, angle_second, first_is_high == second_is_high);
 					ang_path_first = calcAngle(angle_path, angle_first, path_is_high == first_is_high);
 					ang_path_second = calcAngle(angle_path, angle_second, path_is_high == second_is_high);
 					
 					if(!(ang_path_first >= ang_first_second || ang_path_second >= ang_first_second)) return true;
 				}
+					
+				if(Double.isFinite(gradient_path)) {
+					int probe_x1 = (x2-x1)/2 + x1;
+					int probe_x2 = probe_x1;
+					int probe_y1 = (int)(gradient_path*probe_x1+n_path);
+					int probe_y2 = 0;
+					int counter = 0;
+					for(int j = 0; j < sides.length; j++) {
+						if(!(probe_x1 == sides[j][0] || probe_x1 == sides[j][2])) {
+							if(intersectsWithSide(probe_x1, probe_x2, probe_y1, probe_y2, j)) counter++;
+						}
+					}
+					if(counter%2 != 0) return true;
+				}
+				
+				if(gradient_path != 0) {
+					int probe_y1 = (y2-y1)/2 + y1;
+					int probe_y2 = probe_y1;
+					int probe_x1 = (int)((probe_y1-n_path)/gradient_path);
+					int probe_x2 = 0;
+					int counter = 0;
+					for(int j = 0; j < sides.length; j++) {
+						if(!(probe_y1 == sides[j][1] || probe_y1 == sides[j][3])) {
+							if(intersectsWithSide(probe_x1, probe_x2, probe_y1, probe_y2, j)) counter++;
+						}
+					}
+					if(counter%2 != 0) return true;
+				}
 			}
 		}
+		return false;
+	}
+	
+	private boolean intersectsWithSide(int x1, int x2, int y1, int y2, int side_index) {
+
+		double path_gradient, side_gradient;
+		path_gradient = (double)(y2 - y1) / (double)(x2 - x1);
+		side_gradient = (double)(sides[side_index][3] - sides[side_index][1]) / (double)(sides[side_index][2] - sides[side_index][0]);
+		double n_path, n_side;
+		n_path = -(path_gradient*x1-y1); // intersection with y-axis
+		n_side = -(side_gradient*sides[side_index][0]-sides[side_index][1]);
+		
+		// calculate intersection
+		// m1*x+n1 = m2*x+n2 	(m = gradient; n = intersection with y-axis)
+		// <=> x = (n1-n2) / (m2-m1)
+		if(side_gradient != path_gradient) {
+			if(Double.isFinite(side_gradient) && Double.isFinite(path_gradient)) {
+				double intersection_x = (double) (n_path-n_side) / (double) (side_gradient-path_gradient);
+				double intersection_y = (double) path_gradient * intersection_x + n_path;
+				if((intersection_x > x1) == (intersection_x < x2) && (intersection_x > sides[side_index][0]) == (intersection_x < sides[side_index][2])) return true;
+				if((int)intersection_x == x1) {
+					if((int) intersection_y == y1) {
+						if(((intersection_x > sides[side_index][0]) && (intersection_x < sides[side_index][2])) ||
+								((intersection_x < sides[side_index][0]) && (intersection_x > sides[side_index][2]))) return true;
+					}
+				} else if((int)intersection_x == x2) {
+					if((int) intersection_y == y2) {
+						if(((intersection_x > sides[side_index][0]) == (intersection_x < sides[side_index][2])) ||
+								((intersection_x < sides[side_index][0]) && (intersection_x > sides[side_index][2]))) return true;
+					}
+				} else if((int)intersection_x == sides[side_index][0]) {
+					if((int) intersection_y == sides[side_index][1]) {
+						if(((intersection_x > x1) == (intersection_x < x2)) ||
+							((intersection_x < x1) && (intersection_x > x2))) return true;
+					}
+				} else if((int)intersection_x == sides[side_index][2]) {
+					if((int) intersection_y == sides[side_index][3]) {
+						if(((intersection_x > x1) == (intersection_x < x2)) ||
+								((intersection_x < x1) && (intersection_x > x2))) return true;
+					}
+				}
+			} else {
+				if(Double.isInfinite(side_gradient)) {
+					double intersection_x = sides[side_index][0];
+					double path_inters_y = path_gradient*intersection_x+n_path;
+					if((sides[side_index][1] > path_inters_y == sides[side_index][3] < path_inters_y) && (x1 > intersection_x == x2 < intersection_x)) return true;
+				} else {
+					double intersection_x = x1;
+					double side_inters_y = side_gradient*intersection_x+n_side;
+					if((y1 > side_inters_y == y2 < side_inters_y) && (sides[side_index][0] > intersection_x == sides[side_index][2] < intersection_x)) return true;
+//				}
+				}
+			}
+		} else {
+			if(Double.isInfinite(path_gradient)) {
+				if(x1 == sides[side_index][0]) return true;
+			} else {
+				if(n_path == n_side) return true;
+			}
+		}
+	
 		return false;
 	}
 
@@ -365,7 +401,7 @@ public class Obstacle {
 	// Getters and Setters ----------------------------------------------------
 	
 	public int getCorners() {
-		return corners;
+		return corner_count;
 	}
 
 	public int[] getXCorners() {
