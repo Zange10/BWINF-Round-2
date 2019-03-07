@@ -249,32 +249,48 @@ public class Obstacle {
 					if(!(ang_path_first >= ang_first_second || ang_path_second >= ang_first_second)) return true;
 				}
 					
-				if(Double.isFinite(gradient_path)) {
-					int probe_x1 = (x2-x1)/2 + x1;
-					int probe_x2 = probe_x1;
-					int probe_y1 = (int)(gradient_path*probe_x1+n_path);
-					int probe_y2 = 0;
-					int counter = 0;
-					for(int j = 0; j < sides.length; j++) {
-						if(!(probe_x1 == sides[j][0] || probe_x1 == sides[j][2])) {
-							if(intersectsWithSide(probe_x1, probe_x2, probe_y1, probe_y2, j)) counter++;
+				if(containsPoint(x1, y1) && containsPoint(x2, y2)) {
+					if(Double.isFinite(gradient_path)) {
+						int probe_x1, probe_x2, probe_y1, probe_y2;
+						probe_x1 = (x2-x1)/2 + x1;
+						probe_x2 = probe_x1;
+						if(gradient_path != 0) {
+							probe_y1 = (int)(gradient_path*probe_x1+n_path);
+							probe_y2 = 0;
+						} else {
+							probe_y1 = y1;
+							probe_y2 = 0;
 						}
-					}
-					if(counter%2 != 0) return true;
-				}
-				
-				if(gradient_path != 0) {
-					int probe_y1 = (y2-y1)/2 + y1;
-					int probe_y2 = probe_y1;
-					int probe_x1 = (int)((probe_y1-n_path)/gradient_path);
-					int probe_x2 = 0;
-					int counter = 0;
-					for(int j = 0; j < sides.length; j++) {
-						if(!(probe_y1 == sides[j][1] || probe_y1 == sides[j][3])) {
-							if(intersectsWithSide(probe_x1, probe_x2, probe_y1, probe_y2, j)) counter++;
+						int counter = 0;
+						for(int j = 0; j < sides.length; j++) {
+							if(!(probe_x1 == sides[j][0] || probe_x1 == sides[j][2])) {
+								if(intersectsWithSide(probe_x1, probe_x2, probe_y1, probe_y2, j)) counter++;
+							}
 						}
+						if(counter%2 != 0) return true;
 					}
-					if(counter%2 != 0) return true;
+					
+					if(gradient_path != 0) {
+						int probe_x1, probe_x2, probe_y1, probe_y2;
+						probe_y1 = (y2-y1)/2 + y1;
+						probe_y2 = probe_y1;
+						if(Double.isFinite(gradient_path)) {
+							probe_x1 = (int)((probe_y1-n_path)/gradient_path);
+							probe_x2 = 0;
+						} else {
+							probe_x1 = x1;
+							probe_x2 = 0;
+						}
+						int counter = 0;
+						System.out.println(probe_x1 + " " + probe_y1);
+						System.out.println(intersectsWithSide(probe_x1, probe_x2, probe_y1, probe_y2, 3));
+						for(int j = 0; j < sides.length; j++) {
+							if(!(probe_y1 == sides[j][1] || probe_y1 == sides[j][3])) {
+								if(intersectsWithSide(probe_x1, probe_x2, probe_y1, probe_y2, j)) counter++;
+							}
+						}
+						if(counter%2 != 0) return true;
+					}
 				}
 			}
 		}
@@ -396,6 +412,15 @@ public class Obstacle {
 	}
 	
 	
+	
+	public boolean containsPoint(int x, int y) {
+		for(int i = 0; i < xCorners.length; i++) {
+			if(xCorners[i] == x && yCorners[i] == y) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	
 	// Getters and Setters ----------------------------------------------------
