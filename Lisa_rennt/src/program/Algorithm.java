@@ -46,7 +46,7 @@ public class Algorithm {
 		int home_x1 = home_pos[0];
 		int home_y1 = home_pos[1];
 		int home_x2 = 0;
-		int home_y2 = (int) (home_pos[1] + home_pos[0]/Math.sqrt(3));	// fastest way: m = x/3^0.5
+		int home_y2 = (int) (home_pos[1] + home_pos[0]/Math.sqrt(3));	// fastest way: m = 1/(3^0.5)
 		if(!(intersectsWithAnyObstacle(home_x1, home_y1, home_x2, home_y2))) {
 			home_paths[all_corners.size()] = new int[]{home_x1, home_y1, home_x2, home_y2};
 		}
@@ -70,7 +70,7 @@ public class Algorithm {
 			int x1 = all_corners.get(i)[0];
 			int y1 = all_corners.get(i)[1];
 			int x2 = 0;
-			int y2 = (int) (all_corners.get(i)[1] + all_corners.get(i)[0]/Math.sqrt(3));	// fastest way: m = x/3^0.5
+			int y2 = (int) (all_corners.get(i)[1] + all_corners.get(i)[0]/Math.sqrt(3));	// fastest way: m = /3^0.5
 			if(!(intersectsWithAnyObstacle(x1, y1, x2, y2))) new_paths[all_corners.size()] = new int[]{x1, y1, x2, y2};
 			else new_paths[all_corners.size()] = null;
 			all_paths[i] = new_paths;
