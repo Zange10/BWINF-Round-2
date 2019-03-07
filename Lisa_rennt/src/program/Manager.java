@@ -34,7 +34,7 @@ public class Manager {
 		window.drawHome(home_pos[0], home_pos[1]);
 		
 		if(paths != null) {
-			for(ArrayList<Integer> pathPoints : paths)
+			for(ArrayList<Integer> pathPoints : paths) {
 				for(int i = 0; i < pathPoints.size()/2-1; i++) {
 					int x1 = pathPoints.get(i*2);
 					int y1 = pathPoints.get(i*2+1);
@@ -42,6 +42,7 @@ public class Manager {
 					int y2 = pathPoints.get((i+1)*2+1);
 					window.drawPath(x1, y1, x2, y2, Color.CYAN);
 				}
+			}
 		} else {
 			int x1 = home_pos[0];
 			int y1 = home_pos[1];

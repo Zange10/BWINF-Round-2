@@ -219,7 +219,7 @@ public class Obstacle {
 				}
 
 				double ang_first_second, ang_path_first, ang_path_second;
-				
+
 				if(angle_first == 0) {
 					boolean horizontal;
 					int[] x_values = new int[]{sides[i][0], sides[i][2]};
@@ -248,7 +248,7 @@ public class Obstacle {
 					
 					if(!(ang_path_first >= ang_first_second || ang_path_second >= ang_first_second)) return true;
 				}
-					
+
 				if(containsPoint(x1, y1) && containsPoint(x2, y2)) {
 					if(Double.isFinite(gradient_path)) {
 						int probe_x1, probe_x2, probe_y1, probe_y2;
@@ -261,15 +261,17 @@ public class Obstacle {
 							probe_y1 = y1;
 							probe_y2 = 0;
 						}
-						int counter = 0;
+						double counter = 0;
 						for(int j = 0; j < sides.length; j++) {
 							if(!(probe_x1 == sides[j][0] || probe_x1 == sides[j][2])) {
 								if(intersectsWithSide(probe_x1, probe_x2, probe_y1, probe_y2, j)) counter++;
+							} else {
+								counter += 0.5; // two sides at one corner
 							}
 						}
 						if(counter%2 != 0) return true;
 					}
-					
+
 					if(gradient_path != 0) {
 						int probe_x1, probe_x2, probe_y1, probe_y2;
 						probe_y1 = (y2-y1)/2 + y1;
@@ -281,12 +283,12 @@ public class Obstacle {
 							probe_x1 = x1;
 							probe_x2 = 0;
 						}
-						int counter = 0;
-						System.out.println(probe_x1 + " " + probe_y1);
-						System.out.println(intersectsWithSide(probe_x1, probe_x2, probe_y1, probe_y2, 3));
+						double counter = 0;
 						for(int j = 0; j < sides.length; j++) {
 							if(!(probe_y1 == sides[j][1] || probe_y1 == sides[j][3])) {
 								if(intersectsWithSide(probe_x1, probe_x2, probe_y1, probe_y2, j)) counter++;
+							} else {
+								counter += 0.5; // two sides at one corner
 							}
 						}
 						if(counter%2 != 0) return true;

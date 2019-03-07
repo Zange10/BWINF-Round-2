@@ -87,11 +87,11 @@ public class Algorithm {
 		routePoints.add(lastY);
 		
 		calcAllPaths(home_index, all_paths, routePoints, 0);
-		System.out.println("-----------------------------------------");
-		for(int i = 0; i < obstacles.length; i++) {
-			System.out.println(i + " " + obstacles[i].isOnPath(380, 228, 380, 208));
-		}
-		System.out.println("-----------------------------------------");
+//		System.out.println("-----------------------------------------");
+//		for(int i = 0; i < obstacles.length; i++) {
+//			System.out.println(i + " " + obstacles[i].isOnPath(90, 35, 170, 55));
+//		}
+//		System.out.println("-----------------------------------------");
 //		
 //		return routes;
 		
