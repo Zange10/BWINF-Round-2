@@ -12,27 +12,30 @@ public class Manager {
 	Window window;
 	Obstacle[] obstacles;
 	Algorithm algo;
-	int[] home_pos;
-	ArrayList<int[]> all_corners;
-	int highest, rightest;
+	int[] home_pos;	// x and y position of Lisa's home
+	ArrayList<int[]> all_corners;	// x and y position of every corner of every obstacle
+	int highest, rightest;	// rightest and highest point of "image"
 	
 	Manager() {
-		highest = 0;
-		rightest = 0;
-		all_corners = new ArrayList<int[]>();
-		home_pos = new int[2];
-//		parseData("data/example4.txt");
-		parseData("data/lisarennt5.txt");
+		this.highest = 0;
+		this.rightest = 0;
+		this.all_corners = new ArrayList<int[]>();
+		this.home_pos = new int[2];
+		// TODO: GUI for getting file
+		parseData("data/lisarennt4.txt");
 		algo = new Algorithm(home_pos, obstacles, all_corners);
 		ArrayList<Integer> route = algo.caculate();
-		ArrayList<ArrayList<Integer>> paths = algo.getAllPaths();
 		
+		// end of path is sometimes higher than highest obstacle
 		if(route.get(route.size()-1) > highest) highest = route.get(route.size()-1);
-		window = new Window(rightest+250, highest+50);
-		sleep(200);
+		
+		window = new Window(rightest+250, highest+50);	
+		sleep(200);	// algorithm sometimes to fast for window to open
 		window.drawObstacles(obstacles);
 		window.drawHome(home_pos[0], home_pos[1]);
 		
+
+//		ArrayList<ArrayList<Integer>> paths = algo.getAllPaths();
 //		if(paths != null) {
 //			for(ArrayList<Integer> pathPoints : paths) {
 //				for(int i = 0; i < pathPoints.size()/2-1; i++) {
@@ -50,8 +53,8 @@ public class Manager {
 //			int y2 = window.getHeight()/2;
 //			window.drawPath(x1, y1, x2, y2, Color.BLACK);
 //		}
-
-		
+//
+//		
 //		ArrayList<Integer> fastest = algo.getFastest();
 //		for(int i = 0; i < fastest.size()/2-1; i++) {
 //			int x1 = fastest.get(i*2);
@@ -61,6 +64,7 @@ public class Manager {
 //			window.drawPath(x1, y1, x2, y2, Color.RED);
 //		}
 
+		// drawing every path of the best route
 		for(int i = 0; i < route.size()/2-1; i++) {
 			int x1 = route.get(i*2);
 			int y1 = route.get(i*2+1);
@@ -69,28 +73,38 @@ public class Manager {
 			window.drawPath(x1, y1, x2, y2, Color.GREEN);
 		}
 		
-		window.writeTime(algo.getTime(), home_pos[0], home_pos[1], 0, route.get(route.size()-1));
+		window.writeTimes(algo.getTimes(), home_pos[0], home_pos[1], 0, route.get(route.size()-1));
 		
 		System.out.println("finished");
 	}
 	
+	/**
+	 * this method parses the data from the user's file:
+	 * 1. getting amount of obstacles
+	 * 2. getting amount of corners and their positions for every obstacle
+	 * 3. getting home's position
+	 */
 	private void parseData(String path) {
 		try {
 			Scanner scanner = new Scanner(new File(path));
-			int obst_count = scanner.nextInt();
+			int obst_count = scanner.nextInt();	// the amount of obstacles
 			obstacles = new Obstacle[obst_count];
 			for(int i = 0; i < obst_count; i++) {
 				int corner_count = scanner.nextInt();
+				
 				obstacles[i] = new Obstacle(corner_count);
 				for(int j = 0; j < corner_count; j++) {
 					int x = scanner.nextInt();
 					int y = scanner.nextInt();
+					
+					// getting rightest and highest corner
 					if(x > rightest) rightest = x;
 					if(y > highest) highest = y;
 					obstacles[i].addCorner(x, y, j);
 					all_corners.add(new int[] {x,y});
 				}
 			}
+
 			home_pos[0] = scanner.nextInt();
 			home_pos[1] = scanner.nextInt();
 			if(home_pos[0] > rightest) rightest = home_pos[0];
@@ -102,6 +116,7 @@ public class Manager {
 		}
 	}
 	
+	// Method to wait a specific time
 	private void sleep(int millisec) {
 		try {
 			Thread.sleep(millisec);

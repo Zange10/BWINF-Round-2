@@ -52,13 +52,17 @@ public class Window extends JFrame{
 		}
 	}
 	
+	// draws Lisa's home as a red circle
 	public void drawHome(int x, int y) {
 		Graphics g = getGraphics();
+		// border of the circle
 		g.setColor(Color.BLACK);
 		g.drawOval(calcX(x)-5, calcY(y)-5, 10, 10);
+		// fill circle with red
 		g.setColor(Color.RED);
 		g.fillOval(calcX(x)-5, calcY(y)-5, 10, 10);
 	}
+	
 	
 	public void drawObstacles(Obstacle[] obstacles) {
 		Graphics g = getGraphics();
@@ -75,25 +79,32 @@ public class Window extends JFrame{
 		}
 	}
 
+	// draws a line between two points
 	public void drawPath(int x1, int y1, int x2, int y2, Color color) {
 		Graphics g = getGraphics();
 		g.setColor(color);
 		g.drawLine(calcX(x1), calcY(y1), calcX(x2), calcY(y2));
 	}
 	
-	public void writeTime(double[] times, int x1, int y1, int x2, int y2) {
+	// writes the times when Lisa should start and when Lisa is coming to her destination
+	public void writeTimes(double[] times, int x1, int y1, int x2, int y2) {
 		Graphics g = getGraphics();
 		g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
 		g.setColor(Color.WHITE);
+		// starting time
 		g.drawString(parseTime(times[0]) + "", calcX(x1)+5, calcY(y1)-5);
+		// destination time
 		g.drawString(parseTime(times[1]) + "", calcX(x2)+5, calcY(y2)-5);
 	}
 	
 	private String parseTime(double time) {
+		// time in seconds (negative = before starting time)
+		// starting time: 7:30 (7:30:00:000)
 		int hour = 7;
 		int minute = 30;
 		int second = 0;
 		int millisecond = 0;
+		// calculating hours
 		while(time >= 3600 || time <= -3600) {
 			if(time > 0) {
 				hour++;
@@ -102,7 +113,7 @@ public class Window extends JFrame{
 				hour--;
 				time += 3600;
 			}
-		}
+		} // calculating minutes
 		while(time >= 60 || time <= -60) {
 			if(time > 0) {
 				minute++;
@@ -111,11 +122,11 @@ public class Window extends JFrame{
 				minute--;
 				time += 60;
 			}
-		}
+		} // calculating seconds and milliseconds
 		if(time >= 0) {
 			second = (int) time;
 			time -= second;	// works, because second is floored
-			millisecond = (int) (time*1000);
+			millisecond = (int) (time*1000);	// 3 digits behind comma are milliseconds
 		} else {
 			second = 59 + (int) time;	// (int) is always floored; needs to be other way round
 			time -= (int) time;	// every digit behind the dot is not cleared
@@ -123,6 +134,7 @@ public class Window extends JFrame{
 		}
 		
 		String s_hour, s_minute, s_second, s_millisecond;
+		// checking if you need zeros to fill the digits, which would else not be shown
 		if(hour == 0) s_hour = "00:";
 		else if(hour < 10) s_hour = "0" + hour + ":";
 		else s_hour = hour + ":";
@@ -141,10 +153,12 @@ public class Window extends JFrame{
 		return s_hour + s_minute + s_second + s_millisecond;
 	}
 	
+	// returns x-value calculated for output
 	private int calcX(int x) {
 		return roadwidth + x;
 	}
 	
+	// returns y-value calculated for output
 	private int calcY(int y) {
 		return getHeight() - y;
 	}
