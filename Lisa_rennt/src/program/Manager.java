@@ -22,7 +22,7 @@ public class Manager {
 		this.all_corners = new ArrayList<int[]>();
 		this.home_pos = new int[2];
 		// TODO: GUI for getting file
-		parseData("data/lisarennt4.txt");
+		parseData("data/lisarennt5.txt");
 		algo = new Algorithm(home_pos, obstacles, all_corners);
 		ArrayList<Integer> route = algo.caculate();
 		
@@ -53,8 +53,8 @@ public class Manager {
 //			int y2 = window.getHeight()/2;
 //			window.drawPath(x1, y1, x2, y2, Color.BLACK);
 //		}
-//
-//		
+
+		
 //		ArrayList<Integer> fastest = algo.getFastest();
 //		for(int i = 0; i < fastest.size()/2-1; i++) {
 //			int x1 = fastest.get(i*2);
