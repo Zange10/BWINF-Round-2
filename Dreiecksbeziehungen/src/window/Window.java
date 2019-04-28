@@ -51,6 +51,8 @@ public class Window extends JFrame{
 			yPoints[j] = calcY(yPoints[j]);
 		}
 		g.fillPolygon(xPoints, yPoints, 3);
+		g.setColor(Color.DARK_GRAY);
+		g.drawPolygon(xPoints, yPoints, 3);
 	}
 
 	public void drawDistance(int distance) {

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import triangle.Triangle;
 import window.Window;
 
 
@@ -16,8 +17,6 @@ public class Manager {
 	Algorithm algo;
 	
 	Manager() {
-		
-		
 		parseData("Data/dreiecke5.txt");
 		
 		algo = new Algorithm(triangles);

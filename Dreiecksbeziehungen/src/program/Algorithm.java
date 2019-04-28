@@ -2,6 +2,8 @@ package program;
 
 import java.util.ArrayList;
 
+import triangle.Triangle;
+
 public class Algorithm {
 	Triangle[] triangles;
 	int distance;
@@ -13,7 +15,6 @@ public class Algorithm {
 	
 	public Triangle[] calculate() {
 		double allFirstAngles = addSharpestAngles();
-		System.out.println(allFirstAngles);
 		if(allFirstAngles <= 180) {
 			Semicircle sc = new Semicircle(triangles);
 			triangles = sc.getTriangles();
@@ -25,8 +26,16 @@ public class Algorithm {
 			for(int i = 0; i < triangleGroups.size(); i++) {
 				semicircles[i] = new Semicircle(triangleGroups.get(i));
 				if(semicircles[i].getHighest() > highest) highest = (int) semicircles[i].getHighest();
-				if(i>0) buffX -= semicircles[i].getLeftest();	// leftest is negative
-				semicircles[i].move(buffX);
+				if(i>0) {
+					buffX -= semicircles[i].getLeftest();	// leftest is negative
+					semicircles[i].move(buffX);
+					System.out.println(buffX);
+					semicircles[i-1].calcMinDistanceDiff(semicircles[i]);
+					double diff = -(semicircles[i-1].calcMinDistanceDiff(semicircles[i]));
+					System.out.println(buffX + " " + diff);
+					buffX += diff;
+					semicircles[i].move(diff);
+				}
 				buffX += semicircles[i].getRightest();
 				Triangle[] group_triangles = semicircles[i].getTriangles();
 				for(int j = 0; j < group_triangles.length; j++) {
@@ -67,7 +76,6 @@ public class Algorithm {
 						angle_counter -= t[i].getAngles()[0];
 						int tIndex = searchForAngle(180-angle_counter, t);
 						while(tIndex >= 0) {
-							System.out.println(angle_counter);
 							tGroup.add(t[tIndex]);
 							angle_counter += t[tIndex].getAngles()[0];
 							t[tIndex] = null;
