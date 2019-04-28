@@ -27,7 +27,6 @@ public class Triangle {
 	private void calcSides() {
 		for(int i = 0; i < 3; i++) {
 			sides[i] = new Side(pos[i][0], pos[i][1], pos[(i+1)%3][0], pos[(i+1)%3][1]);
-//			System.out.println(pos[i][0] + " " + pos[i][1] + " " + pos[(i+1)%3][0] + " " + pos[(i+1)%3][1]);
 			sidelengths[i] = sides[i].getSidelength();
 		}
 	}

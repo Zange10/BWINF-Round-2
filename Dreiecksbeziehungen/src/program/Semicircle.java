@@ -123,15 +123,6 @@ public class Semicircle {
 		double difference = sc.getOriginX();
 		Triangle[] testingTriangles = sc.getTriangles();
 		
-		for(int i = 0; i < triangles.length; i++) {
-			Side[] sides = triangles[i].getSides();
-			for(int j = 0; j < 3; j++) {
-				System.out.print(sides[j].getX1() + " " + sides[j].getY1() + " " + sides[j].getX2() + " " + sides[j].getY2() + "   ");
-			}
-		}
-		System.out.println("");
-		
-		
 		for(int i = 0; i <= highestInd; i++) {
 			Side[] sides = triangles[i].getSides();
 			for(int j = 0; j < 3; j++) {
@@ -150,39 +141,28 @@ public class Semicircle {
 						b1 = ((y1 > tY2 && y2 > tY2));	// too high
 						b2 = ((y1 < tY1 && y2 < tY1));	// too low
 						if(b1 || b2) continue;
-						System.out.println("--------- -----" + y1 + " " + y2 + " " + tY1 + " " + tY2);
-						System.out.println("----------- " + x1 + " " + x2 + " " + tX1 + " " + tX2);
 						
 						if(y1 < tY1) {
 							double buffDiff = tX1 - sides[j].calcX(tY1);
-							System.out.println(1 + " " + tX1 + " " + sides[j].calcX(tY1));
 							if(buffDiff < difference) difference = buffDiff;
 						} else if (y1 > tY1){
 							double buffDiff = testingSides[l].calcX(y1) - x1;
-							System.out.println(2 + " " + testingSides[l].calcX(y1) + " " + x1);
 							if(buffDiff < difference) difference = buffDiff;
 						} else {
 							double buffDiff = tX1 - x1;
-							System.out.println(5 + " " + tX1 + " " + x1);
 							if(buffDiff < difference) difference = buffDiff;
 						}
-						System.out.println(difference);
 
 						if(y2 > tY2) {
 							double buffDiff = tX2 - sides[j].calcX(tY2);
-							System.out.println(3 + " " + tX2 + " " + sides[j].calcX(tY2));
 							if(buffDiff < difference) difference = buffDiff;
 						} else if(y2 < tY2) {
 							double buffDiff = testingSides[l].calcX(y2) - x2;
-							System.out.println(4 + " " + testingSides[l].calcX(y2) + " " + x2);
 							if(buffDiff < difference) difference = buffDiff;
 						} else {
 							double buffDiff = tX1 - x1;
-							System.out.println(6 + " " + tX2 + " " + x2);
 							if(buffDiff < difference) difference = buffDiff;
 						}
-						System.out.println(difference);
-						System.out.println("");
 					}
 				}
 			}

@@ -5,7 +5,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import triangle.Triangle;
+import window.FileWindow;
 import window.Window;
 
 
@@ -17,7 +21,8 @@ public class Manager {
 	Algorithm algo;
 	
 	Manager() {
-		parseData("Data/dreiecke5.txt");
+		FileWindow fcWindow = new FileWindow();
+		parseData(fcWindow.getPath());
 		
 		algo = new Algorithm(triangles);
 		triangles = algo.calculate();
@@ -28,12 +33,12 @@ public class Manager {
 
 		window.SetNewWindowSize(algo.getLeftest(), algo.getRightest(), algo.getHighest());
 		try {
-			Thread.sleep(200);
+			Thread.sleep(200);	// window needs time to build itself up
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Distance: " + algo.getDistance());
+
 		for(int i = 0; i < triangles.length; i++) {
 			Color color;
 			if(i%2 == 0) color = Color.BLACK;
@@ -42,7 +47,6 @@ public class Manager {
 		}
 		
 		window.drawDistance(algo.getDistance());
-		System.out.println("finished");
 	}
 	
 	// parsing userdata
@@ -74,9 +78,10 @@ public class Manager {
 	
 	
 	public static void main(String[] args) {
-		long start = System.currentTimeMillis();
-		System.out.println("start");
-		new Manager();
-		System.out.println(System.currentTimeMillis()-start);
+		try {
+			new Manager();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(new JFrame(), "Beim nächsten Mal bitte eine gültige Datei wählen.");
+		}
 	}
 }

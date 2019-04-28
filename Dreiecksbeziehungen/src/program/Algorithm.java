@@ -18,6 +18,10 @@ public class Algorithm {
 		if(allFirstAngles <= 180) {
 			Semicircle sc = new Semicircle(triangles);
 			triangles = sc.getTriangles();
+			distance = 0;
+			rightest = (int) sc.getRightest();
+			leftest = (int) sc.getLeftest();
+			highest = (int) sc.getHighest();
 		} else {
 			ArrayList<ArrayList<Triangle>> triangleGroups = calcGroups(triangles);
 			Semicircle[] semicircles = new Semicircle[triangleGroups.size()];
@@ -29,10 +33,8 @@ public class Algorithm {
 				if(i>0) {
 					buffX -= semicircles[i].getLeftest();	// leftest is negative
 					semicircles[i].move(buffX);
-					System.out.println(buffX);
 					semicircles[i-1].calcMinDistanceDiff(semicircles[i]);
 					double diff = -(semicircles[i-1].calcMinDistanceDiff(semicircles[i]));
-					System.out.println(buffX + " " + diff);
 					buffX += diff;
 					semicircles[i].move(diff);
 				}
@@ -45,7 +47,7 @@ public class Algorithm {
 			}
 			distance = (int) (buffX - semicircles[semicircles.length-1].getRightest());
 			rightest = (int) buffX;
-			leftest = (int) semicircles[0].getRightest();
+			leftest = (int) semicircles[0].getLeftest();
 		}
 		return triangles;
 	}

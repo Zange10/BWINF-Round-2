@@ -6,6 +6,10 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+import window.FileWindow;
 import window.Window;
 
 public class Manager {
@@ -21,8 +25,10 @@ public class Manager {
 		this.rightest = 0;
 		this.all_corners = new ArrayList<int[]>();
 		this.home_pos = new int[2];
-		// TODO: GUI for getting file
-		parseData("data/lisarennt5.txt");
+
+		FileWindow fcWindow = new FileWindow();
+		parseData(fcWindow.getPath());
+		
 		algo = new Algorithm(home_pos, obstacles, all_corners);
 		ArrayList<Integer> route = algo.caculate();
 		
@@ -127,9 +133,10 @@ public class Manager {
 	}
 	
 	public static void main(String[] args) {
-		long start = System.currentTimeMillis();
-		System.out.println("start");
-		new Manager();
-		System.out.println(System.currentTimeMillis()-start);
+		try {
+			new Manager();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(new JFrame(), "Beim nächsten Mal bitte eine gültige Datei wählen.");
+		}
 	}
 }

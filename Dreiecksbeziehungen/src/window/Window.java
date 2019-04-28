@@ -73,7 +73,7 @@ public class Window extends JFrame{
 	}
 	
 	public void SetNewWindowSize(int minX, int maxX, int maxheight) {
-		this.leftmargin = minX;
+		this.leftmargin = -minX;	// minX always negative
 		this.width = maxX + leftmargin + 2*(sidemargin);
 		this.height = maxheight + 2*(sidemargin);
 		this.setSize(width, height);
@@ -81,6 +81,7 @@ public class Window extends JFrame{
 	    int x = (d.width - getSize().width) / 2;
 	    int y = (d.height - getSize().height) / 2 - 17;
 	    this.setLocation(x, y);
+		
 	}
 	
 	// returns x-value calculated for output
