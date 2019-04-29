@@ -21,6 +21,7 @@ public class Manager {
 	Algorithm algo;
 	
 	Manager() {
+		// getting file from user
 		FileWindow fcWindow = new FileWindow();
 		parseData(fcWindow.getPath());
 		
@@ -32,12 +33,9 @@ public class Manager {
 		this.rightest = algo.getRightest();
 
 		window.SetNewWindowSize(algo.getLeftest(), algo.getRightest(), algo.getHighest());
-		try {
-			Thread.sleep(200);	// window needs time to build itself up
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		try {Thread.sleep(200);	// window needs time to build itself up
+		} catch (InterruptedException e) {e.printStackTrace();}
 
 		for(int i = 0; i < triangles.length; i++) {
 			Color color;
@@ -61,7 +59,7 @@ public class Manager {
 				for(int j = 0; j < 3; j++) {	// for three corners
 					int x = scanner.nextInt();
 					int y = scanner.nextInt();
-					p[j*2] = x;
+					p[j*2] = x;		// 2, because always two values are given (x and y)
 					p[j*2+1] = y;
 					// getting rightest and highest corner
 					if(x > rightest) rightest = x;

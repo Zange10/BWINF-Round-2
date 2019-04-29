@@ -165,15 +165,15 @@ public class Obstacle {
 				double angle_path = Math.toDegrees(Math.atan(gradient_path));
 				double angle_first = Math.toDegrees(Math.atan(gradient_first));
 				double angle_second = Math.toDegrees(Math.atan(gradient_second));
-
+	
 				// is the intersection point the highest point
 				boolean first_is_high = (intersection[0] == sides[i][0] && intersection[1] == sides[i][1]);
 				boolean second_is_high = (intersection[0] == sides[sec_index][0] && intersection[1] == sides[sec_index][1]);
 				boolean path_is_high = (y1 < intersection[1] || y2 < intersection[1]);
-
+	
 				// n = -(m*x-y) = y-m*x
 				double n_path = y1-gradient_path*x1; // intersection with y-axis
-
+	
 				// has path same gradient as the first side -----------------
 				if(gradient_path == gradient_first || (Double.isInfinite(gradient_path) && Double.isInfinite(gradient_first))) {
 					// does path stops on side (if it does, another corner is there and Lisa should not be able to pass it)
@@ -206,10 +206,10 @@ public class Obstacle {
 						continue;
 					}
 				}
-
+	
 				// angles between those straights (path, first side, second side)
 				double ang_first_second, ang_path_first, ang_path_second;
-
+	
 				// calculating angles between these straights -------------------
 				
 				// if the first side is parallel to x-axis
@@ -276,7 +276,7 @@ public class Obstacle {
 						}
 						if(counter%2 != 0) return true;
 					}
-
+	
 					if(gradient_path != 0) {
 						// sending a probes from middle of the path to the left and checking how many sides they intersect
 						// if they intersect an uneven number of sides, path is in obstacle
@@ -383,9 +383,9 @@ public class Obstacle {
 		if(x_values[0] < intersection[0] || x_values[1] < intersection[0]) {
 			if(line_is_high) {
 				if(gradient_line > 0) {
-					angle = 	Math.abs(angle_line);	// (Math.abs(angle_first) + Math.abs(angle_second))
+					angle = 	Math.abs(angle_line);
 				} else {
-					angle =180-	Math.abs(angle_line);	//	Math.abs(angle_first) = 0
+					angle =180-	Math.abs(angle_line);
 				}
 			} else {
 				if(gradient_line > 0) {

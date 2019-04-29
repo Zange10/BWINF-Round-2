@@ -12,7 +12,7 @@ public class Side {
 		this.x2 = x2;
 		this.y2 = y2;
 		
-		sortByX();
+		sortByX();	// lower x first
 		calcYAxisIntersect();
 		calcSideLengths();
 	}
@@ -34,6 +34,7 @@ public class Side {
 	}
 	
 	public void sortByX() {
+		// lower x fist
 		if(!(x1 < x2)) {
 			int buffX = x1;
 			int buffY = y1;
@@ -46,6 +47,7 @@ public class Side {
 	}
 	
 	public void sortByY() {
+		// lower y first
 		if(!(y1 < y2)) {
 			int buffX = x1;
 			int buffY = y1;

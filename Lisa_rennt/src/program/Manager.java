@@ -26,10 +26,8 @@ public class Manager {
 		this.all_corners = new ArrayList<int[]>();
 		this.home_pos = new int[2];
 
-//		FileWindow fcWindow = new FileWindow();
-//		parseData(fcWindow.getPath());
-		parseData("data/example3.txt");
-//		parseData("data/lisarennt5.txt");
+		FileWindow fcWindow = new FileWindow();
+		parseData(fcWindow.getPath());
 		
 		algo = new Algorithm(home_pos, obstacles, all_corners);
 		ArrayList<Integer> route = algo.caculate();
@@ -41,36 +39,6 @@ public class Manager {
 		sleep(200);	// algorithm sometimes to fast for window to open
 		window.drawObstacles(obstacles);
 		window.drawHome(home_pos[0], home_pos[1]);
-		
-
-//		ArrayList<ArrayList<Integer>> paths = algo.getAllPaths();
-//		if(paths != null) {
-//			for(ArrayList<Integer> pathPoints : paths) {
-//				for(int i = 0; i < pathPoints.size()/2-1; i++) {
-//					int x1 = pathPoints.get(i*2);
-//					int y1 = pathPoints.get(i*2+1);
-//					int x2 = pathPoints.get((i+1)*2);
-//					int y2 = pathPoints.get((i+1)*2+1);
-//					window.drawPath(x1, y1, x2, y2, Color.CYAN);
-//				}
-//			}
-//		} else {
-//			int x1 = home_pos[0];
-//			int y1 = home_pos[1];
-//			int x2 = 0;
-//			int y2 = window.getHeight()/2;
-//			window.drawPath(x1, y1, x2, y2, Color.BLACK);
-//		}
-
-		
-//		ArrayList<Integer> shortest = algo.getShortest();
-//		for(int i = 0; i < shortest.size()/2-1; i++) {
-//			int x1 = shortest.get(i*2);
-//			int y1 = shortest.get(i*2+1);
-//			int x2 = shortest.get((i+1)*2);
-//			int y2 = shortest.get((i+1)*2+1);
-//			window.drawPath(x1, y1, x2, y2, Color.RED);
-//		}
 
 		// drawing every path of the best route
 		for(int i = 0; i < route.size()/2-1; i++) {
@@ -133,10 +101,10 @@ public class Manager {
 	}
 	
 	public static void main(String[] args) {
-//		try {
+		try {
 			new Manager();
-//		} catch (Exception e) {
-//			JOptionPane.showMessageDialog(new JFrame(), "Beim nächsten Mal bitte eine gültige Datei wählen.");
-//		}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(new JFrame(), "Beim nächsten Mal bitte eine gültige Datei wählen.");
+		}
 	}
 }

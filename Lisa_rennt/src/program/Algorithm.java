@@ -211,46 +211,6 @@ public class Algorithm {
 		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));	// a^2 + b^2 = c^2
 	}
 	
-	// to be excluded ------------------------------------------------------------------------------------------
-	public ArrayList<ArrayList<Integer>> getAllPaths() {
-		ArrayList<ArrayList<Integer>> allPaths = new ArrayList<ArrayList<Integer>>();
-		for(int[][] a : all_paths) {
-			for(int[] p : a) {
-				if(p != null) {
-					ArrayList<Integer> points = new ArrayList<Integer>();
-					for(int c : p) {
-						points.add(c);
-					}
-					allPaths.add(points);
-				}
-			}
-		}
-		return allPaths;
-	}
-	
-	public ArrayList<Integer> getShortest() {
-		ArrayList<Integer> route = new ArrayList<Integer>();
-		int index = 0;
-		double shortest = distances.get(0);
-		for(int i = 0; i < distances.size(); i++) {
-			if(distances.get(i) <= shortest) {
-				shortest = distances.get(i);
-				route = routes.get(i);
-				index = i;
-			}
-		}
-		// to be excluded ------------------------------------------------------------------------------------------
-		
-		double walk_vel = 15.0/3.6;	// walk velocity (15 km/h to ~4 m/s)
-		double walk_time = distances.get(index)/walk_vel;	// time to walk distance at 15 km/h
-		double bus_vel = 30.0/3.6;
-		double bus_loc = routes.get(index).get(routes.get(index).size()-1);
-		double bus_time = bus_loc/bus_vel;	// bus velocity (30 km/h to ~8 m/s)
-		double time = bus_time-walk_time;
-//		System.out.println("--- " + time);
-		return route;
-	}
-	
 	// returns start and destination time
 	public double[] getTimes() {
 		return shortest_time;

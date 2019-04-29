@@ -8,7 +8,7 @@ public class Triangle {
 	
 	
 	public Triangle(int x1, int y1, int x2, int y2, int x3, int y3) {
-		this.pos = new int[3][2];
+		this.pos = new int[3][2];	// tree points with two values each (x and y)
 		this.sidelengths = new double[3];
 		this.sides = new Side[3];
 		this.angles = new double[3];
@@ -47,7 +47,8 @@ public class Triangle {
 			angles[i] = Math.toDegrees(Math.acos((a*a - b*b - c*c)/(-2*b*c)));
 		}
 	}
-	
+
+	// sharpest angle with index = 0
 	private void sortByAngle() {
 		int shAngInd = 0;	// sharpest Angle
 		double shAng = angles[0];

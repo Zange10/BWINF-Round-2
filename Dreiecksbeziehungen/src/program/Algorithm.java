@@ -14,8 +14,8 @@ public class Algorithm {
 	}
 	
 	public Triangle[] calculate() {
-		double allFirstAngles = addSharpestAngles();
-		if(allFirstAngles <= 180) {
+		double allSharpestAngles = addSharpestAngles();
+		if(allSharpestAngles <= 180) {
 			Semicircle sc = new Semicircle(triangles);
 			triangles = sc.getTriangles();
 			distance = 0;
@@ -23,6 +23,7 @@ public class Algorithm {
 			leftest = (int) sc.getLeftest();
 			highest = (int) sc.getHighest();
 		} else {
+			// the groups which triangles should form a semicircle
 			ArrayList<ArrayList<Triangle>> triangleGroups = calcGroups(triangles);
 			Semicircle[] semicircles = new Semicircle[triangleGroups.size()];
 			int t_counter = 0;
@@ -34,6 +35,7 @@ public class Algorithm {
 					buffX -= semicircles[i].getLeftest();	// leftest is negative
 					semicircles[i].move(buffX);
 					semicircles[i-1].calcMinDistanceDiff(semicircles[i]);
+					// difference of minimum distance to last semicircle and current position
 					double diff = -(semicircles[i-1].calcMinDistanceDiff(semicircles[i]));
 					buffX += diff;
 					semicircles[i].move(diff);
@@ -55,17 +57,18 @@ public class Algorithm {
 	private double addSharpestAngles() {
 		double result = 0;
 		for(int i = 0; i < triangles.length; i++) {
-			result += triangles[i].getAngles()[0];
+			result += triangles[i].getAngles()[0];	// angles are sorted that getAngles()[0] is sharpest
 		}
 		return result;
 	}
 
 	private ArrayList<ArrayList<Triangle>> calcGroups(Triangle[] t) {
+		// dull angle --> sharp angle
 		sortByAngles(t);
 		ArrayList<ArrayList<Triangle>> triangleGroups = new ArrayList<ArrayList<Triangle>>();
 		for(int i = 0; i < t.length; ) {
 			ArrayList<Triangle> tGroup = new ArrayList<Triangle>();
-			double angle_counter = 0;
+			double angle_counter = 0;	// maximum is 180 degrees
 			while(angle_counter < 180 && i < t.length) {
 				if(t[i] == null) i++;
 				else {
@@ -76,6 +79,7 @@ public class Algorithm {
 						i++;
 					} else {
 						angle_counter -= t[i].getAngles()[0];
+						// find next fitting triangle
 						int tIndex = searchForAngle(180-angle_counter, t);
 						while(tIndex >= 0) {
 							tGroup.add(t[tIndex]);
@@ -93,6 +97,7 @@ public class Algorithm {
 	}
 	
 	private int searchForAngle(double angle, Triangle[] t) {
+		// until you find a fitting triangle
 		for(int i = 0; i < t.length; i++) {
 			if(t[i] != null && t[i].getAngles()[0] < angle) return i;
 		}
@@ -100,6 +105,7 @@ public class Algorithm {
 	}
 	
 	private Triangle[] sortByAngles(Triangle[] t) {
+		// dull angle --> sharp angle
 		for(int i = 0; i < t.length - 1; i++) {
 			for(int j = i + 1; j < t.length; j++) {
 				if(t[i].getAngles()[0] < t[j].getAngles()[0]) {
