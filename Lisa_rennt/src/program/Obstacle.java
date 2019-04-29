@@ -106,10 +106,10 @@ public class Obstacle {
 		for(int i = 0; i < sides.length; i++) {
 			// is path in range of side ---------
 			boolean b1, b2, b3, b4;
-			b1 = ((x1 < sides[i][0] && x1 < sides[i][2]) && (x2 < sides[i][0] && x2 < sides[i][2]));	// lefter
-			b2 = ((x1 > sides[i][0] && x1 > sides[i][2]) && (x2 > sides[i][0] && x2 > sides[i][2]));	// righter
-			b3 = ((y1 > sides[i][1] && y2 > sides[i][1]));	// higher
-			b4 = ((y1 < sides[i][3] && y2 < sides[i][3]));	// lower
+			b1 = ((x1 < sides[i][0] && x1 < sides[i][2]) && (x2 < sides[i][0] && x2 < sides[i][2]));	// too left
+			b2 = ((x1 > sides[i][0] && x1 > sides[i][2]) && (x2 > sides[i][0] && x2 > sides[i][2]));	// too right
+			b3 = ((y1 > sides[i][1] && y2 > sides[i][1]));	// too high
+			b4 = ((y1 < sides[i][3] && y2 < sides[i][3]));	// too low
 			if(b1 || b2 || b3 || b4) continue;
 			
 			// is one end of path is one corner of side -----------

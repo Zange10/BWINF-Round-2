@@ -26,8 +26,10 @@ public class Manager {
 		this.all_corners = new ArrayList<int[]>();
 		this.home_pos = new int[2];
 
-		FileWindow fcWindow = new FileWindow();
-		parseData(fcWindow.getPath());
+//		FileWindow fcWindow = new FileWindow();
+//		parseData(fcWindow.getPath());
+		parseData("data/example3.txt");
+//		parseData("data/lisarennt5.txt");
 		
 		algo = new Algorithm(home_pos, obstacles, all_corners);
 		ArrayList<Integer> route = algo.caculate();
@@ -61,12 +63,12 @@ public class Manager {
 //		}
 
 		
-//		ArrayList<Integer> fastest = algo.getFastest();
-//		for(int i = 0; i < fastest.size()/2-1; i++) {
-//			int x1 = fastest.get(i*2);
-//			int y1 = fastest.get(i*2+1);
-//			int x2 = fastest.get((i+1)*2);
-//			int y2 = fastest.get((i+1)*2+1);
+//		ArrayList<Integer> shortest = algo.getShortest();
+//		for(int i = 0; i < shortest.size()/2-1; i++) {
+//			int x1 = shortest.get(i*2);
+//			int y1 = shortest.get(i*2+1);
+//			int x2 = shortest.get((i+1)*2);
+//			int y2 = shortest.get((i+1)*2+1);
 //			window.drawPath(x1, y1, x2, y2, Color.RED);
 //		}
 
@@ -78,10 +80,8 @@ public class Manager {
 			int y2 = route.get((i+1)*2+1);
 			window.drawPath(x1, y1, x2, y2, Color.GREEN);
 		}
-		
+//		
 		window.writeTimes(algo.getTimes(), home_pos[0], home_pos[1], 0, route.get(route.size()-1));
-		
-		System.out.println("finished");
 	}
 	
 	/**
@@ -133,10 +133,10 @@ public class Manager {
 	}
 	
 	public static void main(String[] args) {
-		try {
+//		try {
 			new Manager();
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(new JFrame(), "Beim nächsten Mal bitte eine gültige Datei wählen.");
-		}
+//		} catch (Exception e) {
+//			JOptionPane.showMessageDialog(new JFrame(), "Beim nächsten Mal bitte eine gültige Datei wählen.");
+//		}
 	}
 }

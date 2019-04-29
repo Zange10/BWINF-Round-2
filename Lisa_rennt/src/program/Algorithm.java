@@ -105,10 +105,10 @@ public class Algorithm {
 		for(int i = 0; i < routes.size(); i++) {
 			double walk_vel = 15.0/3.6;	// walk velocity (15 km/h to ~4 m/s)
 			double walk_time = distances.get(i)/walk_vel;	// time to walk distance at 15 km/h
-			double bus_vel = 30.0/3.6;
-			double bus_loc = routes.get(i).get(routes.get(i).size()-1);
-			double bus_time = bus_loc/bus_vel;	// bus velocity (30 km/h to ~8 m/s)
-			double time = bus_time-walk_time;
+			double bus_vel = 30.0/3.6;	// bus velocity (30 km/h to ~8 m/s)
+			double bus_loc = routes.get(i).get(routes.get(i).size()-1); // y-position of last route point
+			double bus_time = bus_loc/bus_vel;
+			double time = bus_time-walk_time;	// time for Lisa to exit home
 			if(time > best_time || i == 0) {
 				best_time = time;
 				final_route = routes.get(i);
@@ -204,7 +204,7 @@ public class Algorithm {
 	
 	// calculates with Pythagoras
 	private double calcDistance(ArrayList<Integer> buf_pathPoints) {
-		int size = buf_pathPoints.size();
+		int size = buf_pathPoints.size();	// only last 4 points wanted
 		double a = buf_pathPoints.get(size-4) - buf_pathPoints.get(size-2);
 		double b = buf_pathPoints.get(size-3) - buf_pathPoints.get(size-1);
 		
